@@ -2,7 +2,7 @@ import Input from './components/ui/Input'
 import { useState } from 'react'
 import Layout from './components/ui/Layout'
 import Header from './components/ui/Header'
-import Login from './pages/Login'
+import Login from './pages/access/Login'
 
 const App = () => {
   const [count, setCount] = useState(0)

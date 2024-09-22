@@ -10,3 +10,7 @@
 
   @apply font-fonts;
 }
+
+p {
+  @apply text-t;
+}
