@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { cn } from 'lib/utils'
+import { cn } from '../../lib/utils'
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   isError?: boolean
@@ -10,8 +10,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, isError, errorMessage, ...props }, ref) => {
     return (
       <div>
-        {isError && errorMessage && <p>{errorMessage}</p>}
-        <input type={type} className={cn(className)} ref={ref} {...props} />
+        {isError && errorMessage && <span>{errorMessage}</span>}
+        <input type={type} className={cn('flex w-full', className)} ref={ref} {...props} />
       </div>
     )
   },

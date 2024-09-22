@@ -1,21 +1,27 @@
+import Input from './components/ui/Input'
 import { useState } from 'react'
+import Layout from './components/ui/Layout'
+import Header from './components/ui/Header'
+import Login from './pages/Login'
 
-function App() {
+const App = () => {
   const [count, setCount] = useState(0)
 
-  console.log('Hello')
+  const toggleLight = () => {
+    console.log('Toggle light pressed')
+  }
 
   return (
-    <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+    <Layout>
+      <Header />
+      <div className="m-4 flex flex-col gap-2 rounded border-2 border-blue-500 p-4">
+        <button className="text-t" onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <Input />
       </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+      <Login />
+    </Layout>
   )
 }
 
