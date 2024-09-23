@@ -10,7 +10,7 @@ const config = {
       colors: {
         base: {
           light: '#262119',
-          DEFAULT: '#2d281e',
+          DEFAULT: '#2d3232',
           dark: '#1f1b13',
         },
         t: {

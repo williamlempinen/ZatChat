@@ -11,6 +11,7 @@
   @apply font-fonts;
 }
 
+button,
 p {
   @apply text-t;
 }

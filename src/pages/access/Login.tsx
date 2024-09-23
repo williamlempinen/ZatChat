@@ -21,10 +21,9 @@ const Login = () => {
   }
 
   return (
-    <div className="flex flex-col place-items-center border-4 border-shl bg-base-dark">
+    <div className="flex h-full w-full flex-col place-items-center gap-2 border-4 border-shl bg-base-dark">
       <p>Login</p>
       <div>
-        <p>Email</p>
         <Input
           type="text"
           name="email"
@@ -34,7 +33,6 @@ const Login = () => {
         />
       </div>
       <div>
-        <p>Password</p>
         <Input
           type="password"
           name="password"

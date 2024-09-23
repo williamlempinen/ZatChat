@@ -1,26 +1,26 @@
-import Input from './components/ui/Input'
-import { useState } from 'react'
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'
 import Layout from './components/ui/Layout'
-import Header from './components/ui/Header'
-import Login from './pages/access/Login'
+import Access from './pages/Access'
+import { PropsWithChildren } from 'react'
+
+const PrivateRoute = ({ children }: PropsWithChildren) => {
+  const navigate = useNavigate()
+
+  // TEMP
+  const isAuthenticated = true
+
+  if (isAuthenticated) return children
+  return navigate('/access')
+}
 
 const App = () => {
-  const [count, setCount] = useState(0)
-
-  const toggleLight = () => {
-    console.log('Toggle light pressed')
-  }
-
   return (
     <Layout>
-      <Header />
-      <div className="m-4 flex flex-col gap-2 rounded border-2 border-blue-500 p-4">
-        <button className="text-t" onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <Input />
-      </div>
-      <Login />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Access />} />
+        </Routes>
+      </Router>
     </Layout>
   )
 }
