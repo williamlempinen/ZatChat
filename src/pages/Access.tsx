@@ -9,8 +9,7 @@ const Access = () => {
 
   return (
     <>
-      <Header />
-      <div className="my-16 flex h-full flex-col items-center gap-6 border-2 border-error p-2">
+      <div className="my-16 flex h-full w-full flex-col items-center gap-6 border-2 border-error p-2">
         <div className="flex w-full justify-evenly border-2 border-success">
           <button onClick={toggle}>Login</button>
           <button onClick={toggle}>Signup</button>
@@ -19,7 +18,6 @@ const Access = () => {
           {isSignup ? <Signup /> : <Login />}
         </div>
       </div>
-      <Footer />
     </>
   )
 }
