@@ -12,6 +12,7 @@
 }
 
 button,
-p {
+p,
+span {
   @apply text-t;
 }
