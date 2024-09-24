@@ -2,6 +2,7 @@ import * as React from 'react'
 import Input from '../../components/ui/Input'
 import { validator } from '../../lib/utils'
 import AccessSchema from './schema'
+import { useAuth } from '../../lib/AuthContext'
 
 type UserLoginDetails = {
   email: string
@@ -17,6 +18,8 @@ const Login = () => {
     Partial<Record<keyof UserLoginDetails, string>>
   >({})
 
+  const { login } = useAuth()
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     setCredentials((prev) => ({
@@ -25,7 +28,7 @@ const Login = () => {
     }))
   }
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     console.log('Submitting')
 
@@ -39,6 +42,8 @@ const Login = () => {
     }
 
     console.log('Form is valid')
+
+    await login(credentials.email, credentials.password)
   }
 
   return (
@@ -57,7 +62,7 @@ const Login = () => {
         errorMessage={formErrors.email}
       />
       <Input
-        type="password"
+        type="text" /*dev*/
         name="password"
         value={credentials.password}
         onChange={handleInputChange}

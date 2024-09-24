@@ -1,10 +1,8 @@
-import { PropsWithChildren } from 'react'
+import * as React from 'react'
 import Header from './Header'
 import Footer from './Footer'
 
-interface Props extends PropsWithChildren { }
-
-const Layout = ({ children }: Props) => {
+const Layout = ({ children }: React.PropsWithChildren) => {
   return (
     <div className="min-w-screen flex min-h-screen flex-col justify-center bg-base">
       <Header />
