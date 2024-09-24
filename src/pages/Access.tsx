@@ -8,7 +8,7 @@ const Access = () => {
   const { state: isSignup, toggle } = useToggle(false, true)
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-6 border-2 border-error p-2">
+    <div className="flex w-full flex-col items-center gap-6 rounded bg-base-light p-4 pb-16 shadow shadow-t">
       <div className="flex w-full justify-evenly border-2 border-success">
         <button onClick={toggle}>Login</button>
         <button onClick={toggle}>Signup</button>

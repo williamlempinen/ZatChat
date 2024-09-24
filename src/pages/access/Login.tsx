@@ -3,6 +3,7 @@ import Input from '../../components/ui/Input'
 import { validator } from '../../lib/utils'
 import AccessSchema from './schema'
 import { useAuth } from '../../lib/AuthContext'
+import { nodeServerApi } from '../../lib/api/nodeServerApi'
 
 type UserLoginDetails = {
   email: string
@@ -19,6 +20,8 @@ const Login = () => {
   >({})
 
   const { login } = useAuth()
+
+  const { testGetProtectedData } = nodeServerApi()
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
@@ -43,35 +46,44 @@ const Login = () => {
 
     console.log('Form is valid')
 
-    await login(credentials.email, credentials.password)
+    await login(credentials)
+  }
+
+  const test = async () => {
+    console.log('testing')
+    const res = await testGetProtectedData()
+    console.log('res: ', res)
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex h-full w-full flex-col place-items-center gap-2 rounded-lg bg-base-dark p-2 shadow shadow-shl"
-    >
-      <p className="mb-6 text-lg font-bold text-hl">Enter your credentials</p>
-      <Input
-        type="text"
-        name="email"
-        value={credentials.email}
-        onChange={handleInputChange}
-        placeholder="Email"
-        isError={!!formErrors.email}
-        errorMessage={formErrors.email}
-      />
-      <Input
-        type="text" /*dev*/
-        name="password"
-        value={credentials.password}
-        onChange={handleInputChange}
-        placeholder="Password"
-        isError={!!formErrors.password}
-        errorMessage={formErrors.password}
-      />
-      <button type="submit">Login</button>
-    </form>
+    <>
+      <form
+        onSubmit={handleSubmit}
+        className="flex h-full w-full flex-col place-items-center gap-2 rounded-lg bg-base-dark p-2"
+      >
+        <p className="mb-6 text-lg font-bold text-hl">Enter your credentials</p>
+        <Input
+          type="text"
+          name="email"
+          value={credentials.email}
+          onChange={handleInputChange}
+          placeholder="Email"
+          isError={!!formErrors.email}
+          errorMessage={formErrors.email}
+        />
+        <Input
+          type="text" /*dev*/
+          name="password"
+          value={credentials.password}
+          onChange={handleInputChange}
+          placeholder="Password"
+          isError={!!formErrors.password}
+          errorMessage={formErrors.password}
+        />
+        <button type="submit">Login</button>
+      </form>
+      <button onClick={test}>Test auth</button>
+    </>
   )
 }
 
