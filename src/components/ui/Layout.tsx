@@ -2,14 +2,14 @@ import { PropsWithChildren } from 'react'
 import Header from './Header'
 import Footer from './Footer'
 
-interface Props extends PropsWithChildren {}
+interface Props extends PropsWithChildren { }
 
 const Layout = ({ children }: Props) => {
   return (
-    <div className="flex h-full w-full flex-col items-start justify-center bg-base">
+    <div className="min-w-screen flex min-h-screen flex-col justify-center bg-base">
       <Header />
-      <div className="flex h-full w-full justify-center">
-        <div className="w-full max-w-[1600px]">{children}</div>
+      <div className="flex h-full w-full flex-1 justify-center">
+        <div className="w-full max-w-[1600px] p-4">{children}</div>
       </div>
       <Footer />
     </div>

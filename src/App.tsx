@@ -15,13 +15,13 @@ const PrivateRoute = ({ children }: PropsWithChildren) => {
 
 const App = () => {
   return (
-    <Layout>
-      <Router>
+    <Router>
+      <Layout>
         <Routes>
           <Route path="/" element={<Access />} />
         </Routes>
-      </Router>
-    </Layout>
+      </Layout>
+    </Router>
   )
 }
 
