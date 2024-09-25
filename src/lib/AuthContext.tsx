@@ -3,7 +3,6 @@ import { User } from '../types/types'
 import Cookies from 'js-cookie'
 import * as React from 'react'
 import apiClient from './api/apiClient'
-import axios from 'axios'
 import { redirect } from 'react-router-dom'
 
 type SignupParams = {
@@ -39,22 +38,47 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
 
   const queryClient = useQueryClient()
 
-  React.useEffect(() => {
-    console.log('SESSION ID: ', sessionId)
+  const validateSession = async (): Promise<boolean> => {
+    try {
+      if (!sessionId) return false
 
-    if (accessToken) {
-      console.log('setting in useeffect')
-      apiClient.defaults.headers.Authorization = `Bearer ${accessToken}`
-      Cookies.set('accessToken', accessToken)
-      setIsAuthenticated(true)
-    } else {
-      delete apiClient.defaults.headers.Authorization
-      Cookies.remove('accessToken')
-      setIsAuthenticated(false)
+      const res = apiClient.post('/access/validate-session', { sessionId })
+
+      return !!res
+    } catch (error: any) {
+      console.error('Validating session error')
+      return false
+    }
+  }
+
+  React.useEffect(() => {
+    const checkSession = async () => {
+      const isValid = await validateSession()
+
+      setIsAuthenticated(isValid)
+
+      if (isValid) {
+        apiClient.defaults.headers.Authorization = `Bearer ${accessToken}`
+      } else {
+        handleLogout()
+      }
+
+      console.log(
+        'Logging session: \n is auth',
+        isAuthenticated,
+        '\n session: ',
+        sessionId,
+        '\n access: ',
+        accessToken,
+        '\n refresh: ',
+        refreshToken,
+        '\n ISVALID: ',
+        isValid,
+      )
     }
 
-    console.log('IS AUTHENTICATED: ', isAuthenticated)
-  }, [accessToken])
+    checkSession()
+  }, [accessToken, sessionId, isAuthenticated, refreshToken])
 
   const login = async ({ email, password }: LoginParams): Promise<boolean> => {
     const res = await apiClient.post('/access/login', { email, password })
@@ -99,30 +123,34 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   }
 
   const logout = async () => {
-    setSessionId(Cookies.get('sessionId'))
+    try {
+      await apiClient.post('/access/logout', { sessionId })
 
-    const res = await apiClient.post('/access/logout', { sessionId })
-    if (!res) {
-      console.log('RES FAILED')
+      console.log('Logout action')
+
+      handleLogout()
+    } catch (error: any) {
+      console.error('Logout failed')
+    } finally {
+      handleLogout()
+      redirect('/')
+      window.location.reload()
     }
+  }
 
-    console.log('RES: ', res)
-    console.log('Logout action')
-
+  const handleLogout = () => {
     setAccessToken(undefined)
     setRefreshToken(undefined)
     setSessionId(undefined)
     setUser({} as User)
-    setIsAuthenticated(false)
+
+    queryClient.clear()
 
     Cookies.remove('accessToken')
     Cookies.remove('refreshToken')
     Cookies.remove('sessionId')
 
-    queryClient.clear()
-
-    redirect('/')
-    window.location.reload()
+    delete apiClient.defaults.headers.Authorization
   }
 
   return (
