@@ -41,12 +41,24 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
 
   //const { loginN, signupN, logoutN } = nodeServerApi()
 
-  // VALIDATE SESSION SHOULD RETURN USER TO UPDATE USER STATE
   const validateSession = async (): Promise<boolean> => {
     try {
       if (!sessionId) return false
 
       const res = await apiClient.post('/access/validate-session', { sessionId })
+
+      const data = res.data.data
+      if (!data) return false
+
+      setUser({
+        createdAt: data.created_at,
+        email: data.email,
+        id: data.id,
+        isActive: data.is_active,
+        profilePictureUrl: data.profile_picture_url,
+        role: data.role,
+        username: data.username,
+      })
 
       return res.data.status === 200
     } catch (error: any) {
@@ -112,7 +124,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
       isActive: data.user.is_active,
       profilePictureUrl: data.user.profile_picture_url,
       role: data.user.role,
-      username: data.username,
+      username: data.user.username,
     })
 
     setIsAuthenticated(true)

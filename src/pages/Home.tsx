@@ -1,7 +1,10 @@
 import { nodeServerApi } from '../lib/api/nodeServerApi'
+import { useAuth } from '../lib/AuthContext'
 
 const Home = () => {
   const { testGetProtectedData } = nodeServerApi()
+
+  const { user } = useAuth()
 
   const test = async () => {
     console.log('testing')
@@ -12,7 +15,11 @@ const Home = () => {
   return (
     <div className="bg-shl">
       <p>Hello world</p>Hello World
-      <button onClick={test}>Test auth</button>
+      <button className="bg-base" onClick={test}>
+        Test auth
+      </button>
+      <h1>{user.username}</h1>
+      <h1>{user.email}</h1>
     </div>
   )
 }
