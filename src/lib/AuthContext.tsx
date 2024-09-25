@@ -1,9 +1,10 @@
-import { useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { User } from '../types/types'
 import Cookies from 'js-cookie'
 import * as React from 'react'
 import apiClient from './api/apiClient'
 import { redirect } from 'react-router-dom'
+import { nodeServerApi } from './api/nodeServerApi'
 
 type SignupParams = {
   username: string
@@ -38,13 +39,16 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
 
   const queryClient = useQueryClient()
 
+  //const { loginN, signupN, logoutN } = nodeServerApi()
+
+  // VALIDATE SESSION SHOULD RETURN USER TO UPDATE USER STATE
   const validateSession = async (): Promise<boolean> => {
     try {
       if (!sessionId) return false
 
-      const res = apiClient.post('/access/validate-session', { sessionId })
+      const res = await apiClient.post('/access/validate-session', { sessionId })
 
-      return !!res
+      return res.data.status === 200
     } catch (error: any) {
       console.error('Validating session error')
       return false
@@ -74,13 +78,16 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
         refreshToken,
         '\n ISVALID: ',
         isValid,
+        '\n user: ',
+        user,
       )
     }
 
     checkSession()
-  }, [accessToken, sessionId, isAuthenticated, refreshToken])
+  }, [accessToken, sessionId, refreshToken])
 
   const login = async ({ email, password }: LoginParams): Promise<boolean> => {
+    //const {mutate, isPending, isError} = useMutation<LoginParams>({})
     const res = await apiClient.post('/access/login', { email, password })
 
     const data = res.data.data
@@ -127,8 +134,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
       await apiClient.post('/access/logout', { sessionId })
 
       console.log('Logout action')
-
-      handleLogout()
     } catch (error: any) {
       console.error('Logout failed')
     } finally {
