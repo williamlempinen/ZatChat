@@ -18,8 +18,8 @@ interface AuthContextProps {
   user: User
   accessToken: string | undefined
   refreshToken: string | undefined
-  login: ({ email, password }: LoginParams) => Promise<void>
-  signup: ({ username, email, password }: SignupParams) => Promise<void>
+  login: ({ email, password }: LoginParams) => Promise<boolean>
+  signup: ({ username, email, password }: SignupParams) => Promise<boolean>
   logout: () => void
   isAuthenticated: boolean
 }
@@ -39,26 +39,13 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
 
   const queryClient = useQueryClient()
 
-  //
-  //React.useEffect(() => {
-  //  if (!accessToken) {
-  //    setAccessToken(undefined)
-  //    setUser({} as User)
-  //    setIsAuthenticated(false)
-  //    Cookies.remove('accessToken')
-  //    Cookies.remove('refreshToken')
-  //  return
-  //  }
-  //
-  //  const validateRes = await apiClient.
-  //
-  //})
-
   React.useEffect(() => {
+    console.log('SESSION ID: ', sessionId)
+
     if (accessToken) {
       console.log('setting in useeffect')
       apiClient.defaults.headers.Authorization = `Bearer ${accessToken}`
-      Cookies.set('accessToken', accessToken, { expires: 1 })
+      Cookies.set('accessToken', accessToken)
       setIsAuthenticated(true)
     } else {
       delete apiClient.defaults.headers.Authorization
@@ -69,25 +56,23 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
     console.log('IS AUTHENTICATED: ', isAuthenticated)
   }, [accessToken])
 
-  const login = async ({ email, password }: LoginParams) => {
+  const login = async ({ email, password }: LoginParams): Promise<boolean> => {
     const res = await apiClient.post('/access/login', { email, password })
 
     const data = res.data.data
-    if (!data) {
-      console.log('No data returned, login failed')
-      return
-    }
+
+    if (!data) return false
 
     console.log('DATA: ', data)
 
     setAccessToken(data.accessToken)
-    if (accessToken) Cookies.set('accessToken', accessToken)
+    Cookies.set('accessToken', data.accessToken)
 
     setRefreshToken(data.refreshToken)
-    if (refreshToken) Cookies.set('refreshToken', refreshToken)
+    Cookies.set('refreshToken', data.refreshToken)
 
     setSessionId(data.sessionId)
-    if (sessionId) Cookies.set('sessionId', sessionId)
+    Cookies.set('sessionId', data.sessionId)
 
     setUser({
       createdAt: data.user.created_at,
@@ -96,33 +81,43 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
       isActive: data.user.is_active,
       profilePictureUrl: data.user.profile_picture_url,
       role: data.user.role,
-      username: data.user.username,
+      username: data.username,
     })
 
     setIsAuthenticated(true)
+    return true
   }
 
-  const signup = async ({ username, email, password }: SignupParams) => {
+  const signup = async ({ username, email, password }: SignupParams): Promise<boolean> => {
     console.log('signup action')
+    const res = await apiClient.post('/access/signup', { username, email, password })
+
+    const data = res.data.data
+    if (!data) return false
+
+    return true
   }
 
   const logout = async () => {
-    if (!isAuthenticated) return
-    console.log('USER: ', user)
-    if (!user || !user.id) return
+    setSessionId(Cookies.get('sessionId'))
 
-    const res = await apiClient.post('/access/logout', { id: user.id, sessionId })
+    const res = await apiClient.post('/access/logout', { sessionId })
+    if (!res) {
+      console.log('RES FAILED')
+    }
 
     console.log('RES: ', res)
     console.log('Logout action')
 
     setAccessToken(undefined)
     setRefreshToken(undefined)
+    setSessionId(undefined)
     setUser({} as User)
     setIsAuthenticated(false)
 
     Cookies.remove('accessToken')
     Cookies.remove('refreshToken')
+    Cookies.remove('sessionId')
 
     queryClient.clear()
 

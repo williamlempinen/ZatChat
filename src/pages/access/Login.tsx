@@ -46,7 +46,14 @@ const Login = () => {
 
     console.log('Form is valid')
 
-    await login(credentials)
+    const loginSuccess = await login(credentials)
+
+    if (!loginSuccess) {
+      console.log('Login failed')
+      return
+    }
+
+    console.log('LOGIN SUCCESS')
   }
 
   const test = async () => {
