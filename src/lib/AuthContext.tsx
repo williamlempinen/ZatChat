@@ -39,8 +39,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
 
   const queryClient = useQueryClient()
 
-  //const { loginN, signupN, logoutN } = nodeServerApi()
-
   const validateSession = async (): Promise<boolean> => {
     try {
       if (!sessionId) return false
@@ -48,7 +46,10 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
       const res = await apiClient.post('/access/validate-session', { sessionId })
 
       const data = res.data.data
+      console.log('DATA: \n ', res)
       if (!data) return false
+
+      console.log('DATA2: ', data)
 
       setUser({
         createdAt: data.created_at,
@@ -59,6 +60,8 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
         role: data.role,
         username: data.username,
       })
+
+      console.log('USER: ', data)
 
       return res.data.status === 200
     } catch (error: any) {
@@ -96,10 +99,9 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
     }
 
     checkSession()
-  }, [accessToken, sessionId, refreshToken])
+  }, [])
 
   const login = async ({ email, password }: LoginParams): Promise<boolean> => {
-    //const {mutate, isPending, isError} = useMutation<LoginParams>({})
     const res = await apiClient.post('/access/login', { email, password })
 
     const data = res.data.data
@@ -107,6 +109,8 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
     if (!data) return false
 
     console.log('DATA: ', data)
+
+    apiClient.defaults.headers.Authorization = `Bearer ${data.accessToken}`
 
     setAccessToken(data.accessToken)
     Cookies.set('accessToken', data.accessToken)
@@ -172,7 +176,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, accessToken, refreshToken, login, signup, logout, isAuthenticated }}
+      value={{ user, login, accessToken, refreshToken, signup, logout, isAuthenticated }}
     >
       {children}
     </AuthContext.Provider>

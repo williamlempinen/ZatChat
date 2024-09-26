@@ -16,9 +16,15 @@ export const nodeServerApi = () => {
     return response.data
   }
 
+  const refreshToken = async (email: string, id: number, refreshToken: string) => {
+    const response = await apiClient.post('/access/refreshtoken', { email, id, refreshToken })
+    return response.data
+  }
+
   return {
     login,
     signup,
     testGetProtectedData,
+    refreshToken,
   }
 }
