@@ -9,9 +9,19 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, isError, errorMessage, ...props }, ref) => {
     return (
-      <div>
-        {isError && errorMessage && <span>{errorMessage}</span>}
-        <input type={type} className={cn('flex w-full', className)} ref={ref} {...props} />
+      <div className="relative mt-4">
+        {isError && errorMessage && (
+          <span className="absolute left-2 top-[-18px] text-[12px] text-error">{errorMessage}</span>
+        )}
+        <input
+          type={type}
+          className={cn(
+            `flex w-full rounded border-2 border-hl bg-base p-1 shadow focus:border-shl focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${isError ? 'border-error' : ''}`,
+            className,
+          )}
+          ref={ref}
+          {...props}
+        />
       </div>
     )
   },
