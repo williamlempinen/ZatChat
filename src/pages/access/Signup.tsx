@@ -1,8 +1,6 @@
 import * as React from 'react'
 import PrimaryButton from '../../components/ui/PrimaryButton'
-import Textarea from '../../components/ui/Textarea'
 import AccessSchema from './schema'
-import { nodeServerApi } from '../../lib/api/nodeServerApi'
 import { useAuth } from '../../lib/AuthContext'
 import { validator } from '../../lib/utils'
 import Input from '../../components/ui/Input'
@@ -49,6 +47,7 @@ const Signup = () => {
 
     console.log('Form is valid')
 
+    // signup not yet implemented
     const signupSuccess = await signup(credentials)
 
     if (!signupSuccess) {
@@ -96,9 +95,7 @@ const Signup = () => {
         isError={!!formErrors.password}
         errorMessage={formErrors.password}
       />
-      <button type="submit" className="bg-hl">
-        Signup
-      </button>
+      <PrimaryButton type="submit" displayText="Signup" />
     </form>
   )
 }

@@ -4,6 +4,7 @@ import { validator } from '../../lib/utils'
 import AccessSchema from './schema'
 import { useAuth } from '../../lib/AuthContext'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
+import PrimaryButton from '../../components/ui/PrimaryButton'
 
 type UserLoginDetails = {
   email: string
@@ -87,7 +88,11 @@ const Login = () => {
           isError={!!formErrors.password}
           errorMessage={formErrors.password}
         />
-        <button type="submit">Login</button>
+        <PrimaryButton
+          type="submit"
+          displayText="Login"
+          disabled={credentials.email === '' || credentials.password === ''}
+        />
       </form>
       <button onClick={test}>Test auth</button>
     </>
