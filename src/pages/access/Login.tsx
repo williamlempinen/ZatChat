@@ -91,7 +91,9 @@ const Login = () => {
         <PrimaryButton
           type="submit"
           displayText="Login"
+          isLoading={true}
           disabled={credentials.email === '' || credentials.password === ''}
+          // error state shoudl be received from the function, not from form isError={!!formErrors.email || !!formErrors.password}
         />
       </form>
       <button onClick={test}>Test auth</button>

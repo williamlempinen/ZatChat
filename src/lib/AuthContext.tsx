@@ -101,6 +101,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
     checkSession()
   }, [])
 
+  // make functions to return data, loading, error
   const login = async ({ email, password }: LoginParams): Promise<boolean> => {
     const res = await apiClient.post('/access/login', { email, password })
 

@@ -34,6 +34,14 @@ const config = {
         success: {
           DEFAULT: '#00f000',
         },
+        gray: {
+          light: '#d6d3d1',
+          DEFAULT: '#a8a29e',
+          dark: '#78716c',
+        },
+      },
+      opacity: {
+        disabled: '0.6',
       },
     },
   },
