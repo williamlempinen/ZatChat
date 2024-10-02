@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useToggle } from '../hooks/useToggle'
-import Signup from './access/Signup'
-import Login from './access/Login'
+import Signup from '../components/access/Signup'
+import Login from '../components/access/Login'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../lib/AuthContext'
 

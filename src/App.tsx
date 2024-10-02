@@ -4,6 +4,7 @@ import Access from './pages/Access'
 import { PropsWithChildren } from 'react'
 import { useAuth } from './lib/AuthContext'
 import Home from './pages/Home'
+import Conversation from './pages/Conversation'
 
 const PrivateRoute = ({ children }: PropsWithChildren) => {
   const { isAuthenticated } = useAuth()
@@ -33,6 +34,14 @@ const App = () => {
             element={
               <PrivateRoute>
                 <Home />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/conversation/:id"
+            element={
+              <PrivateRoute>
+                <Conversation />
               </PrivateRoute>
             }
           />
