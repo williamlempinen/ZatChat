@@ -2,7 +2,7 @@ import { nodeServerApi } from '../lib/api/nodeServerApi'
 import { useAuth } from '../lib/AuthContext'
 
 const Home = () => {
-  const { testGetProtectedData, refreshToken: reFunc } = nodeServerApi()
+  const { testGetProtectedData, postRefreshToken: reFunc } = nodeServerApi()
 
   const { user, refreshToken } = useAuth()
 

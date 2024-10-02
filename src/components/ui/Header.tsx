@@ -1,4 +1,5 @@
 import { useAuth } from '../../lib/AuthContext'
+import PrimaryButton from './PrimaryButton'
 
 const Header = () => {
   const { isAuthenticated, logout } = useAuth()
@@ -9,7 +10,13 @@ const Header = () => {
         className={`flex w-full max-w-[1600px] ${isAuthenticated ? 'justify-between' : 'justify-start'} p-4`}
       >
         <h1 className="text-4xl text-hl">ZATCHAT</h1>
-        {isAuthenticated && <button onClick={logout}>Logout</button>}
+        {isAuthenticated && (
+          <PrimaryButton
+            className="bg-secondary text-gray-dark hover:bg-secondary-dark"
+            displayText="Logout"
+            onClick={logout}
+          />
+        )}
       </div>
     </div>
   )

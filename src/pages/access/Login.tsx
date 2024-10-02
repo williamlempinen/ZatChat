@@ -64,40 +64,37 @@ const Login = () => {
   }
 
   return (
-    <>
-      <form
-        onSubmit={handleSubmit}
-        className="flex h-full w-full flex-col place-items-center gap-4 rounded-lg bg-base-dark p-2"
-      >
-        <p className="mb-6 text-lg font-bold text-hl">Enter your credentials</p>
-        <Input
-          type="text"
-          name="email"
-          value={credentials.email}
-          onChange={handleInputChange}
-          placeholder="Email"
-          isError={!!formErrors.email}
-          errorMessage={formErrors.email}
-        />
-        <Input
-          type="text" /*dev*/
-          name="password"
-          value={credentials.password}
-          onChange={handleInputChange}
-          placeholder="Password"
-          isError={!!formErrors.password}
-          errorMessage={formErrors.password}
-        />
-        <PrimaryButton
-          type="submit"
-          displayText="Login"
-          isLoading={true}
-          disabled={credentials.email === '' || credentials.password === ''}
-          // error state shoudl be received from the function, not from form isError={!!formErrors.email || !!formErrors.password}
-        />
-      </form>
+    <form
+      onSubmit={handleSubmit}
+      className="flex h-full w-full flex-col place-items-center gap-4 rounded-lg bg-base-dark p-2 shadow"
+    >
+      <p className="mb-6 text-lg font-bold text-secondary">Enter your credentials</p>
+      <Input
+        type="text"
+        name="email"
+        value={credentials.email}
+        onChange={handleInputChange}
+        placeholder="Email"
+        isError={!!formErrors.email}
+        errorMessage={formErrors.email}
+      />
+      <Input
+        type="text" /*dev*/
+        name="password"
+        value={credentials.password}
+        onChange={handleInputChange}
+        placeholder="Password"
+        isError={!!formErrors.password}
+        errorMessage={formErrors.password}
+      />
+      <PrimaryButton
+        type="submit"
+        displayText="Login"
+        disabled={credentials.email === '' || credentials.password === ''}
+        // error state shoudl be received from the function, not from form isError={!!formErrors.email || !!formErrors.password}
+      />
       <button onClick={test}>Test auth</button>
-    </>
+    </form>
   )
 }
 

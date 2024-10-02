@@ -28,6 +28,10 @@ const config = {
           DEFAULT: '#00ceef',
           dark: '#00acc8',
         },
+        secondary: {
+          DEFAULT: '#FFAA00',
+          dark: '#E29700',
+        },
         error: {
           DEFAULT: '#d73241',
         },

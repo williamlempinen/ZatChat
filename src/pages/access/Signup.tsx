@@ -65,9 +65,9 @@ const Signup = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex h-full w-full flex-col place-items-center gap-4 rounded-lg bg-base-dark p-2"
+      className="flex h-full w-full flex-col place-items-center gap-4 rounded-lg bg-base-dark p-2 shadow"
     >
-      <p className="mb-6 text-lg font-bold text-hl">Enter your credentials for signup</p>
+      <p className="mb-6 text-lg font-bold text-secondary">Enter your credentials for signup</p>
       <Input
         type="text"
         name="username"
