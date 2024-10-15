@@ -5,14 +5,17 @@ import { useAuth } from '../lib/AuthContext'
 import SearchUsers from '../components/home/SearchUsers'
 
 type Conversation = {
-  when: string
+  id: number
+  created_at: string
+  is_group: boolean
+  updated_at: string
 }
 
 const OldConversations = ({ conversations }: { conversations: Conversation[] }) => {
   return (
     <div className="flex flex-col rounded border-2 border-hl">
       {conversations.length > 0 ? (
-        conversations.map((conversation) => <p>{conversation.when}</p>)
+        conversations.map((conversation) => <p key={conversation.id}>{conversation.created_at}</p>)
       ) : (
         <p>You no coversations yet</p>
       )}
@@ -22,10 +25,22 @@ const OldConversations = ({ conversations }: { conversations: Conversation[] }) 
 
 const Home = () => {
   const [query, setQuery] = React.useState<string>('')
+  const [conversations, setConversations] = React.useState<any[]>([])
 
-  const { testGetProtectedData, postRefreshToken: reFunc } = nodeServerApi()
+  const { testGetProtectedData, postRefreshToken: reFunc, getConversations } = nodeServerApi()
 
   const { user, refreshToken } = useAuth()
+
+  React.useEffect(() => {
+    const getConvo = async () => {
+      const response = await getConversations(user.id)
+      setConversations(response.data.data)
+    }
+
+    console.log('USER: ', user)
+
+    getConvo()
+  }, [])
 
   const test = async () => {
     console.log('testing')
@@ -49,11 +64,17 @@ const Home = () => {
     setQuery(value)
   }
 
+  const logger = () => {
+    console.log(conversations)
+    console.log('USER: ', user)
+  }
+
   return (
     <div className="flex flex-col gap-1">
       <p className="text-bold text-2xl text-shl">Welcome {user.username}</p>
       <p>Your previous conversations</p>
-      <OldConversations conversations={[]} />
+      {conversations && logger()}
+      <OldConversations conversations={conversations} />
       <div>
         <p>Search for new users to chat with</p>
         <Input type="text" value={query} onChange={handleQueryChange} />

@@ -21,10 +21,16 @@ export const nodeServerApi = () => {
     return response.data
   }
 
+  const getConversations = async (userId: number) => {
+    const response = await apiClient.get(`/conversation/get-conversations/${userId}`)
+    return response.data
+  }
+
   return {
     postLogin,
     postSignup,
     testGetProtectedData,
     postRefreshToken,
+    getConversations,
   }
 }
