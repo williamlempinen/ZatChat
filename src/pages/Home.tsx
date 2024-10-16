@@ -3,21 +3,41 @@ import Input from '../components/ui/Input'
 import { nodeServerApi } from '../lib/api/nodeServerApi'
 import { useAuth } from '../lib/AuthContext'
 import SearchUsers from '../components/home/SearchUsers'
+import { FilteredUser } from '../types/types'
 
 type Conversation = {
   id: number
   created_at: string
   is_group: boolean
   updated_at: string
+  group_name: string
+  messages: any[]
+  participants: FilteredUser[]
 }
 
-const OldConversations = ({ conversations }: { conversations: Conversation[] }) => {
+const OldConversations = ({
+  conversations,
+  userId,
+}: {
+  conversations: Conversation[]
+  userId: number
+}) => {
   return (
     <div className="flex flex-col rounded border-2 border-hl">
       {conversations.length > 0 ? (
-        conversations.map((conversation) => <p key={conversation.id}>{conversation.created_at}</p>)
+        conversations.map((conversation) => {
+          if (conversation.is_group || conversation.participants.length > 2) {
+            return <p>{conversation.group_name}</p>
+          }
+
+          const friendUser = conversation.participants.filter((p) => p.id !== userId)
+
+          console.log('FRIEND USER: ', friendUser)
+
+          return <p>{friendUser[0].username}</p>
+        })
       ) : (
-        <p>You no coversations yet</p>
+        <p>No conversations yet</p>
       )}
     </div>
   )
@@ -26,6 +46,8 @@ const OldConversations = ({ conversations }: { conversations: Conversation[] }) 
 const Home = () => {
   const [query, setQuery] = React.useState<string>('')
   const [conversations, setConversations] = React.useState<any[]>([])
+  const [conversationPageNumber, setConversationPageNumber] = React.useState<number>(1)
+  const [hasNextPage, setHasNextPage] = React.useState<boolean>(false)
 
   const { testGetProtectedData, postRefreshToken: reFunc, getConversations } = nodeServerApi()
 
@@ -33,10 +55,13 @@ const Home = () => {
 
   React.useEffect(() => {
     const getConvo = async () => {
-      const response = await getConversations(user.id)
+      const response = await getConversations(user.id, conversationPageNumber)
+      console.log('CONVO DATA: ', response)
+
+      setHasNextPage(response.data.hasNextPage)
+
       setConversations(response.data.data)
     }
-
     console.log('USER: ', user)
 
     getConvo()
@@ -64,17 +89,20 @@ const Home = () => {
     setQuery(value)
   }
 
-  const logger = () => {
-    console.log(conversations)
-    console.log('USER: ', user)
+  const getMore = async () => {
+    console.log('GET MORE BUTTOM')
+    const response = await getConversations(user.id, conversationPageNumber + 1)
+    setHasNextPage(response.data.hasNextPage)
+    setConversationPageNumber((prev) => prev + 1)
+    setConversations((prev) => [...prev, ...response.data.data])
   }
 
   return (
     <div className="flex flex-col gap-1">
       <p className="text-bold text-2xl text-shl">Welcome {user.username}</p>
       <p>Your previous conversations</p>
-      {conversations && logger()}
-      <OldConversations conversations={conversations} />
+      <OldConversations conversations={conversations} userId={user.id} />
+      {hasNextPage && <button onClick={() => getMore()}>Get more conversations</button>}
       <div>
         <p>Search for new users to chat with</p>
         <Input type="text" value={query} onChange={handleQueryChange} />

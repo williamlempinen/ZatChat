@@ -7,3 +7,10 @@ export type User = {
   role: 'REGULAR' | 'ADMIN'
   username: string
 }
+
+export type FilteredUser = {
+  email: string
+  id: number
+  profilePictureUrl: string | null
+  username: string
+}
