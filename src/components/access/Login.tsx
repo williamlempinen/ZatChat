@@ -5,6 +5,7 @@ import AccessSchema from './schema'
 import { useAuth } from '../../lib/AuthContext'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
 import PrimaryButton from '../ui/PrimaryButton'
+import { useMutation } from '@tanstack/react-query'
 
 type UserLoginDetails = {
   email: string
@@ -23,6 +24,15 @@ const Login = () => {
   const { login } = useAuth()
 
   const { testGetProtectedData } = nodeServerApi()
+
+  const {
+    mutate: postLogin,
+    isPending,
+    isError,
+  } = useMutation({
+    mutationKey: ['login'],
+    mutationFn: (credentials: UserLoginDetails) => login(credentials),
+  })
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
@@ -47,12 +57,7 @@ const Login = () => {
 
     console.log('Form is valid')
 
-    const loginSuccess = await login(credentials)
-
-    if (!loginSuccess) {
-      console.log('Login failed')
-      return
-    }
+    postLogin(credentials)
 
     console.log('LOGIN SUCCESS')
   }

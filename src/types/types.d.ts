@@ -8,9 +8,19 @@ export type User = {
   username: string
 }
 
-export type FilteredUser = {
+export type Participant = {
   email: string
   id: number
   profilePictureUrl: string | null
   username: string
+}
+
+export type Conversation = {
+  id: number
+  is_group: boolean
+  created_at: Date
+  updated_at: Date
+  group_name: string
+  messages: Message[]
+  participants: Participant[]
 }

@@ -4,6 +4,7 @@ import AccessSchema from './schema'
 import { useAuth } from '../../lib/AuthContext'
 import { validator } from '../../lib/utils'
 import Input from '../../components/ui/Input'
+import { useMutation } from '@tanstack/react-query'
 
 type UserSignupDetails = {
   email: string
@@ -22,6 +23,15 @@ const Signup = () => {
   >({})
 
   const { user, signup } = useAuth()
+
+  const {
+    mutate: postSignup,
+    isPending,
+    isError,
+  } = useMutation({
+    mutationKey: ['signup'],
+    mutationFn: (credentials: UserSignupDetails) => signup(credentials),
+  })
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
@@ -47,13 +57,7 @@ const Signup = () => {
 
     console.log('Form is valid')
 
-    // signup not yet implemented
-    const signupSuccess = await signup(credentials)
-
-    if (!signupSuccess) {
-      console.log('Signup failed')
-      return
-    }
+    postSignup(credentials)
 
     console.log('SIGNUP SUCCESS')
   }
@@ -96,6 +100,8 @@ const Signup = () => {
         errorMessage={formErrors.password}
       />
       <PrimaryButton type="submit" displayText="Signup" />
+      {isPending && <span>Loading...</span>}
+      {isError && <span>Oops... this error is from our side</span>}
     </form>
   )
 }

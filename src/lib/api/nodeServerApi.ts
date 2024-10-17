@@ -23,6 +23,7 @@ export const nodeServerApi = () => {
 
   const getConversations = async (userId: number, pageNumber: number) => {
     const response = await apiClient.get(`/conversation/get-conversations/${userId}/${pageNumber}`)
+    console.log('RES:', response.data)
     return response.data
   }
 
