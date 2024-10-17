@@ -10,11 +10,10 @@ const ConversationBox = ({ conversation }: ConversationBoxProps) => {
   const { user } = useAuth()
 
   return (
-    <div>
-      <p>Hello world</p>
-      <p>my id: {user.id}</p>
+    <div className="my-1 grid grid-cols-2 rounded bg-base-dark p-2 shadow-md shadow-base-light">
       <p>{conversation.group_name}</p>
-      <p>#####</p>
+      <p>{conversation.created_at}</p>
+      <p>my id: {user.id}</p>
     </div>
   )
 }

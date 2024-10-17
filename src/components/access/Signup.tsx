@@ -22,7 +22,7 @@ const Signup = () => {
     Partial<Record<keyof UserSignupDetails, string>>
   >({})
 
-  const { user, signup } = useAuth()
+  const { signup } = useAuth()
 
   const {
     mutate: postSignup,
@@ -60,10 +60,6 @@ const Signup = () => {
     postSignup(credentials)
 
     console.log('SIGNUP SUCCESS')
-  }
-
-  const testButton = () => {
-    console.log('Button clicked')
   }
 
   return (

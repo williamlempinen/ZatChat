@@ -96,8 +96,9 @@ const Login = () => {
         type="submit"
         displayText="Login"
         disabled={credentials.email === '' || credentials.password === ''}
-        // error state shoudl be received from the function, not from form isError={!!formErrors.email || !!formErrors.password}
       />
+      {isPending && <span>Loading...</span>}
+      {isError && <span>Oops... this is error is from our side</span>}
       <button onClick={test}>Test auth</button>
     </form>
   )
