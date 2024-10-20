@@ -24,3 +24,12 @@ export type Conversation = {
   messages: Message[]
   participants: Participant[]
 }
+
+export type Message = {
+  id: number
+  content: string
+  created_at: Date
+  sender_id: number
+  is_seen: boolean
+  conversation_id: number
+}

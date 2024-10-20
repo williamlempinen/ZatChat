@@ -1,5 +1,11 @@
+import { ChatProvider } from '../lib/webSocket/ChatContext'
+
 const Conversation = () => {
-  return <div>Hello world</div>
+  return (
+    <ChatProvider>
+      <div>Hello world</div>
+    </ChatProvider>
+  )
 }
 
 export default Conversation
