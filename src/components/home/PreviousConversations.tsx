@@ -4,6 +4,7 @@ import ConversationBox from './ConversationBox'
 import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '../../lib/AuthContext'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
+import PrimaryButton from '../ui/PrimaryButton'
 
 const Root = ({ children }: React.PropsWithChildren) => (
   <div className="flex flex-col rounded border-2 border-hl p-2 shadow shadow-shl">{children}</div>
@@ -66,14 +67,19 @@ const PreviousConversations = () => {
     <Root>
       {conversations.length > 0 ? (
         conversations.map((conversation: Conversation) => (
-          <ConversationBox conversation={conversation} />
+          <ConversationBox key={conversation.id} conversation={conversation} />
         ))
       ) : (
         <div>
           <p>You don't yet have any ongoing conversations</p>
         </div>
       )}
-      {hasNextPage && <button onClick={() => handlePreviousConversations()}>Get more</button>}
+      {hasNextPage && (
+        <PrimaryButton
+          displayText="Show older conversations"
+          onClick={() => handlePreviousConversations()}
+        />
+      )}
     </Root>
   )
 }

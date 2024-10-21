@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import { nodeServerApi } from './nodeServerApi'
 
 const apiClient = axios.create({
   baseURL: '/api',
@@ -23,6 +24,7 @@ apiClient.interceptors.request.use(
       params: config.params,
       baseURL: config.baseURL,
     })
+    console.log('%c[CONFIG]', 'color: #299393; font-weight: bold;', config)
     return config
   },
   (error) => {
@@ -47,6 +49,15 @@ apiClient.interceptors.response.use(
     return response
   },
   (error) => {
+    const { postRefreshToken } = nodeServerApi()
+    const originalRequest = error.config
+
+    console.log('%c[ORIGINAL REQUEST]: ', 'color: #fff; font-weight: bold;', originalRequest)
+
+    if (error.response.status === 401) {
+      //postRefreshToken(originalRequest)
+    }
+
     if (error.response) {
       console.error('%c[RESPONSE ERROR]', 'color: #e74c3c; font-weight: bold;', {
         url: error.response.config.url,

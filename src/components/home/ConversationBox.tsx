@@ -3,6 +3,7 @@ import { Conversation } from '../../types/types'
 import { useAuth } from '../../lib/AuthContext'
 import connectWebSocket from '../../lib/webSocket/webSocketClient'
 import Cookies from 'js-cookie'
+import { format } from 'date-fns'
 
 type ConversationBoxProps = {
   conversation: Conversation
@@ -10,6 +11,11 @@ type ConversationBoxProps = {
 
 const ConversationBox = ({ conversation }: ConversationBoxProps) => {
   const { user } = useAuth()
+
+  const checkConversationName = (): string => {
+    if (!conversation.group_name.includes('<>')) return conversation.group_name
+    return conversation.group_name.split('<>')[1].trim()
+  }
 
   const connect = () => {
     const token = Cookies.get('accessToken')
@@ -26,8 +32,8 @@ const ConversationBox = ({ conversation }: ConversationBoxProps) => {
       onClick={() => connect()}
       className="my-1 grid grid-cols-2 rounded bg-base-dark p-2 shadow-md shadow-base-light"
     >
-      <p>{conversation.group_name}</p>
-      <p>{JSON.stringify(conversation.created_at)}</p>
+      <p>{checkConversationName()}</p>
+      <p>{format(new Date(conversation.updated_at), 'kk:mm | dd-MM')}</p>
       <p>my id: {user.id}</p>
     </div>
   )

@@ -17,8 +17,8 @@ const PrimaryButton = React.forwardRef<HTMLButtonElement, PrimaryButtonProps>(
           className={cn(
             'gap 2 flex h-full w-full items-center justify-center whitespace-nowrap rounded px-3 py-1 text-lg text-t',
             'transition duration-100 ease-in-out',
-            !disabled && 'hover:scale-105 hover:bg-hl-dark',
-            `${isError && !disabled ? 'bg-error' : 'bg-hl'}`,
+            !disabled && 'hover:scale-101 hover:bg-hl',
+            `${isError && !disabled ? 'bg-error' : 'bg-hl-dark'}`,
             `${disabled && 'bg-gray opacity-disabled transition-none'}`,
             className,
           )}
