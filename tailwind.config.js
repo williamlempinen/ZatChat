@@ -8,6 +8,9 @@ const config = {
         fonts: ['Open Sans', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
       },
       colors: {
+        bg: {
+          DEFAULT: '#e6e6e6',
+        },
         base: {
           light: '#262119',
           DEFAULT: '#2d3232',
