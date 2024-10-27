@@ -5,6 +5,7 @@ import connectWebSocket from '../../lib/webSocket/webSocketClient'
 import Cookies from 'js-cookie'
 import { format } from 'date-fns'
 import { cn } from '../../lib/utils'
+import { useNavigate } from 'react-router-dom'
 
 type ConversationBoxProps = {
   conversation: Conversation
@@ -12,6 +13,8 @@ type ConversationBoxProps = {
 
 const ConversationBox = ({ conversation }: ConversationBoxProps) => {
   const { user } = useAuth()
+
+  const navigate = useNavigate()
 
   const extractConversationName = (): string => {
     if (!conversation.group_name.includes('<>')) return conversation.group_name
@@ -26,6 +29,7 @@ const ConversationBox = ({ conversation }: ConversationBoxProps) => {
     }
 
     connectWebSocket(token)
+    navigate('/conversation/conversation-id')
   }
 
   return (

@@ -11,6 +11,7 @@ const Home = () => {
   const { testGetProtectedData, postRefreshToken: reFunc } = nodeServerApi()
 
   const { user, refreshToken } = useAuth()
+
   const test = async () => {
     console.log('testing')
     const res = await testGetProtectedData()

@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '../../lib/AuthContext'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
 import PrimaryButton from '../ui/PrimaryButton'
+import Loading from '../ui/Loading'
 
 const Root = ({ children }: React.PropsWithChildren) => (
   <div className="flex flex-col rounded border-2 border-hl p-2 shadow shadow-shl">{children}</div>
@@ -14,12 +15,16 @@ const PreviousConversations = () => {
   const [conversations, setConversations] = React.useState<Conversation[]>([])
   const [conversationsPageNumber, setConversationsPageNumber] = React.useState<number>(1)
   const [hasNextPage, setHasNextPage] = React.useState<boolean>(false)
+  const [totalPages, setTotalPages] = React.useState<number>(1)
 
   const { user } = useAuth()
 
   const { getConversations } = nodeServerApi()
 
   const handlePreviousConversations = async () => {
+    if (conversationsPageNumber > totalPages) return []
+    console.log('GOING FOR A QUERY')
+
     const response = await getConversations(user.id, conversationsPageNumber)
 
     if (response.data.hasNextPage) {
@@ -27,7 +32,7 @@ const PreviousConversations = () => {
     } else {
       setHasNextPage(false)
     }
-
+    setTotalPages(response.data.totalPages)
     setConversationsPageNumber((prev) => prev + 1)
     setConversations((prev) => [...prev, ...response.data.data])
 
@@ -43,14 +48,14 @@ const PreviousConversations = () => {
     refetch,
     isSuccess,
   } = useQuery({
-    queryKey: ['get-previous-conversations', user.id],
+    queryKey: ['get-previous-conversations', `user id ${user.id}`],
     queryFn: () => handlePreviousConversations(),
   })
 
   if (isLoading) {
     return (
       <Root>
-        <span>Loading...</span>
+        <Loading />
       </Root>
     )
   }
@@ -80,6 +85,7 @@ const PreviousConversations = () => {
           onClick={() => handlePreviousConversations()}
         />
       )}
+      {isLoading && <Loading />}
     </Root>
   )
 }
