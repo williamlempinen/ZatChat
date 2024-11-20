@@ -12,7 +12,7 @@ type ConversationBoxProps = {
 }
 
 const ConversationBox = ({ conversation }: ConversationBoxProps) => {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
 
   const navigate = useNavigate()
 
@@ -25,11 +25,12 @@ const ConversationBox = ({ conversation }: ConversationBoxProps) => {
     const token = Cookies.get('accessToken')
     if (!token) {
       console.log('NO TOKEN FOUND')
+      logout()
       return
     }
-
+    // connecting is missing error handling on cases if connection is not successful
     connectWebSocket(token)
-    navigate('/conversation/conversation-id')
+    navigate(`/conversation/conversation-id=${conversation.id}`)
   }
 
   return (

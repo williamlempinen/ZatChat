@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { User } from '../types/types'
 import Cookies from 'js-cookie'
 import * as React from 'react'
@@ -21,6 +21,7 @@ interface AuthContextProps {
   login: ({ email, password }: LoginParams) => Promise<boolean>
   signup: ({ username, email, password }: SignupParams) => Promise<boolean>
   logout: () => void
+  refreshTokens: () => Promise<void>
   isAuthenticated: boolean
 }
 
@@ -38,6 +39,8 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false)
 
   const queryClient = useQueryClient()
+
+  const { postRefreshToken } = nodeServerApi()
 
   const validateSession = async (): Promise<boolean> => {
     try {
@@ -174,9 +177,28 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
     delete apiClient.defaults.headers.Authorization
   }
 
+  const refreshTokens = async () => {
+    if (!user.email || !user.id || !refreshToken) return
+
+    const tokensResponse = await postRefreshToken(user.email, user.id, refreshToken)
+    setAccessToken(tokensResponse.accessToken)
+    setRefreshToken(tokensResponse.refreshToken)
+    Cookies.set('accessToken', tokensResponse.accessToken)
+    Cookies.set('refreshToken', tokensResponse.refreshToken)
+  }
+
   return (
     <AuthContext.Provider
-      value={{ user, login, accessToken, refreshToken, signup, logout, isAuthenticated }}
+      value={{
+        user,
+        login,
+        accessToken,
+        refreshToken,
+        refreshTokens,
+        signup,
+        logout,
+        isAuthenticated,
+      }}
     >
       {children}
     </AuthContext.Provider>

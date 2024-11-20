@@ -52,6 +52,10 @@ const PreviousConversations = () => {
     queryFn: () => handlePreviousConversations(),
   })
 
+  // there is issues in loading
+  // same loading is used with root and when fetching
+  // more conversation
+
   if (isLoading) {
     return (
       <Root>
@@ -75,9 +79,7 @@ const PreviousConversations = () => {
           <ConversationBox key={conversation.id} conversation={conversation} />
         ))
       ) : (
-        <div>
-          <p>You don't yet have any ongoing conversations</p>
-        </div>
+        <div>{!isLoading && <p>You don't yet have any ongoing conversations</p>}</div>
       )}
       {hasNextPage && (
         <PrimaryButton

@@ -98,7 +98,7 @@ const Login = () => {
         disabled={credentials.email === '' || credentials.password === ''}
       />
       {isPending && <span>Loading...</span>}
-      {isError && <span>Oops... this is error is from our side</span>}
+      {isError && <span>Wrong credentials, try again</span>}
       <button onClick={test}>Test auth</button>
     </form>
   )

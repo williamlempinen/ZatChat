@@ -8,9 +8,9 @@ import PreviousConversations from '../components/home/PreviousConversations'
 const Home = () => {
   const [query, setQuery] = React.useState<string>('')
 
-  const { testGetProtectedData, postRefreshToken: reFunc } = nodeServerApi()
+  const { testGetProtectedData } = nodeServerApi()
 
-  const { user, refreshToken } = useAuth()
+  const { user, refreshToken, refreshTokens } = useAuth()
 
   const test = async () => {
     console.log('testing')
@@ -25,8 +25,7 @@ const Home = () => {
       return
     }
 
-    const res = await reFunc(user.email, user.id, refreshToken)
-    console.log('RES FROM REFRESHTOKEN: ', res)
+    const _res = await refreshTokens()
   }
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {

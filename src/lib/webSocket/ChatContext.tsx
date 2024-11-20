@@ -3,6 +3,7 @@ import * as React from 'react'
 
 type ChatContextProps = {
   sendMessage: (to: string, content: Message) => void
+  closeConversation: () => void
   // todo
 }
 
@@ -15,6 +16,11 @@ export const ChatProvider = ({ children }: React.PropsWithChildren) => {
     console.log('CHATPROVIDER EFFECT')
   }, [])
 
+  const closeConversation = () => {
+    if (!ws) return
+    ws.close()
+  }
+
   const sendMessage = (to: string, content: Message) => {
     if (!ws) return
 
@@ -22,7 +28,11 @@ export const ChatProvider = ({ children }: React.PropsWithChildren) => {
     ws.send(message)
   }
 
-  return <ChatContext.Provider value={{ sendMessage }}>{children}</ChatContext.Provider>
+  return (
+    <ChatContext.Provider value={{ sendMessage, closeConversation }}>
+      {children}
+    </ChatContext.Provider>
+  )
 }
 
 export const useChat = () => {
