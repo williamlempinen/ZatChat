@@ -38,7 +38,7 @@ const App = () => {
             }
           />
           <Route
-            path="/conversation/:id"
+            path="/conversation/"
             element={
               <PrivateRoute>
                 <Conversation />

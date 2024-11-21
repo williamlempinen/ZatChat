@@ -35,7 +35,6 @@ const PreviousConversations = () => {
     setTotalPages(response.data.totalPages)
     setConversationsPageNumber((prev) => prev + 1)
     setConversations((prev) => [...prev, ...response.data.data])
-
     // part of the comment below
     return []
   }

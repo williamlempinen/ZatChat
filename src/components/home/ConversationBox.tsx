@@ -30,7 +30,7 @@ const ConversationBox = ({ conversation }: ConversationBoxProps) => {
     }
     // connecting is missing error handling on cases if connection is not successful
     connectWebSocket(token)
-    navigate(`/conversation/conversation-id=${conversation.id}`)
+    navigate(`/conversation/?conversation-id=${conversation.id}`, { state: { conversation } })
   }
 
   return (
