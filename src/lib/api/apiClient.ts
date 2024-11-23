@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import { nodeServerApi } from './nodeServerApi'
+import { useAuth } from '../AuthContext'
 
 const apiClient = axios.create({
   baseURL: '/api',
@@ -49,13 +49,15 @@ apiClient.interceptors.response.use(
     return response
   },
   (error) => {
-    const { postRefreshToken } = nodeServerApi()
+    const { refreshTokens, logout } = useAuth()
+
     const originalRequest = error.config
 
     console.log('%c[ORIGINAL REQUEST]: ', 'color: #fff; font-weight: bold;', originalRequest)
 
     if (error.response.status === 401) {
-      //postRefreshToken(originalRequest)
+      //refreshTokens()
+      logout()
     }
 
     if (error.response) {

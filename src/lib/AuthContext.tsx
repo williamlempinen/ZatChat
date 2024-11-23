@@ -148,20 +148,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
     return true
   }
 
-  const logout = async () => {
-    try {
-      await apiClient.post('/access/logout', { sessionId })
-
-      console.log('Logout action')
-    } catch (error: any) {
-      console.error('Logout failed')
-    } finally {
-      handleLogout()
-      redirect('/')
-      window.location.reload()
-    }
-  }
-
   const handleLogout = () => {
     setAccessToken(undefined)
     setRefreshToken(undefined)
@@ -177,6 +163,19 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
     delete apiClient.defaults.headers.Authorization
   }
 
+  const logout = async () => {
+    try {
+      await apiClient.post('/access/logout', { sessionId })
+    } catch (error: any) {
+      console.error('Logout failed')
+    } finally {
+      handleLogout()
+      redirect('/')
+      window.location.reload()
+    }
+  }
+
+  // this should probably handle error case, its used in apiClient.ts
   const refreshTokens = async () => {
     if (!user.email || !user.id || !refreshToken) return
 

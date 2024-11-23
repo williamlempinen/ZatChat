@@ -3,6 +3,9 @@ import { Conversation } from '../../types/types'
 import { useLocation } from 'react-router-dom'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
 import PrimaryButton from '../ui/PrimaryButton'
+import MessageBox from './MessageBox'
+import InputMessageArea from './InputMessageArea'
+import { format } from 'date-fns'
 
 const ConversationContainer = () => {
   const [messagesPageNumber, setMessagesPageNumber] = React.useState<number>(2)
@@ -10,50 +13,99 @@ const ConversationContainer = () => {
   const [totalPages, setTotalPages] = React.useState<number>(1)
 
   const location = useLocation()
-  const conversation = location.state?.conversation as Conversation
+  const [conversationData, setConversationData] = React.useState<Conversation>(
+    location.state?.conversation as Conversation,
+  )
+
+  const messageContainerRef = React.useRef<HTMLDivElement | null>(null)
 
   const { getMessages } = nodeServerApi()
 
   const getOlderMessages = async () => {
-    const response = await getMessages(conversation.id, messagesPageNumber)
+    if (!hasNextPage) return
+
+    const container = messageContainerRef.current
+    const prevScrollHeight = container?.scrollHeight || 0
+
+    const response = await getMessages(conversationData.id, messagesPageNumber)
     const res = response.data
 
     if (res.data.length === 0) {
       setHasNextPage(false)
       console.log('WAS LAST PAGE')
+      return
     }
 
     setMessagesPageNumber((prev) => prev + 1)
     setTotalPages(res.data.totalPages)
-    console.log('RESPONSE DATA: ', res)
-    return []
+
+    setConversationData((prev) => ({
+      ...prev,
+      messages: [...prev.messages, ...res.data],
+    }))
+
+    setTimeout(() => {
+      if (container) {
+        container.scrollTop = container.scrollHeight - prevScrollHeight
+      }
+    }, 0)
   }
 
   React.useEffect(() => {
     const searchParams = new URLSearchParams(location.search)
     const conversationId = searchParams.get('conversation-id')
 
-    if (!conversation) {
-      console.log('NO CONVERSATION')
-    } else {
-      console.log('CONVERSATION IN HERE: ', conversation)
+    const container = messageContainerRef.current
+    if (container) {
+      container.scrollTop = container.scrollHeight
     }
+
+    console.log('INITIAL MESSAGES: ', conversationData.messages)
 
     console.log('SEARCH PARAMS: ', searchParams, ' CONVO ID: ', conversationId)
   }, [])
 
+  const handleScroll = () => {
+    const container = messageContainerRef.current
+    if (container && container.scrollTop < 100 && hasNextPage) {
+      getOlderMessages()
+    }
+  }
+
+  const passUser = (id: number) => {
+    const [user] = conversationData.participants.filter((p) => p.id === id)
+    return user
+  }
+
   return (
-    <div className="flex">
-      <div className="container-top-info-bar"></div>
-      <div className="flex flex-col">
-        {conversation.messages.map((m) => (
-          /*<MessageBox />*/
-          <div className="m-2 border-2 border-shl">
-            <p key={m.id}>{JSON.stringify(m)}</p>
+    <div className="flex max-h-[80rem] w-full flex-grow flex-col border-2 border-white p-4">
+      <div className="h-12 border-b border-gray-300">
+        <p className="text-xl font-bold">{conversationData.group_name}</p>
+      </div>
+      <div
+        className="no-scrollbar flex h-full flex-col overflow-y-auto"
+        ref={messageContainerRef}
+        onScroll={handleScroll}
+      >
+        {!hasNextPage && !conversationData.is_group && (
+          <p className="self-center text-t-sec">
+            Conversation created at: {format(conversationData.created_at, 'dd-MM-yyyy')}
+          </p>
+        )}
+        {!hasNextPage && conversationData.is_group && (
+          <p className="self-center text-t-sec">
+            Group created at: {format(conversationData.created_at, 'dd-MM-yyyy')}
+          </p>
+        )}
+        <div className="flex w-full flex-col-reverse">
+          {conversationData.messages.map((m) => (
+            <MessageBox message={m} senderUser={passUser(m.sender_id)} />
+          ))}
+        </div>
+        {conversationData.messages.length === 30 && hasNextPage && (
+          <div className="self-center">
+            <PrimaryButton displayText="Get older messages" onClick={getOlderMessages} />
           </div>
-        ))}
-        {conversation.messages.length === 30 && hasNextPage && (
-          <PrimaryButton displayText="Get older messages" onClick={getOlderMessages} />
         )}
       </div>
     </div>
