@@ -17,6 +17,12 @@ span {
   @apply text-t;
 }
 
+textarea {
+  overflow: auto;
+  resize: none;
+  outline: none;
+}
+
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
     display: none;

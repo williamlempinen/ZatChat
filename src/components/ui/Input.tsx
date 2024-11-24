@@ -16,7 +16,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           type={type}
           className={cn(
-            `flex w-full rounded border-2 border-hl ${value === '' ? 'bg-base' : 'bg-t-sec'} p-1 shadow focus:border-shl focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${isError ? 'border-error' : ''}`,
+            'flex w-full rounded border-2 border-hl',
+            'p-1 shadow focus:border-shl focus:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+            value === '' ? 'bg-base' : 'bg-t-sec',
+            isError ? 'border-error' : '',
             className,
           )}
           ref={ref}
