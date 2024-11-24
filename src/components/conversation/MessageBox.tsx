@@ -15,7 +15,7 @@ const MessageBox = ({ message, senderUser }: MessageBoxProps) => {
 
   return (
     <div
-      key={JSON.stringify(message.created_at)}
+      key={`${JSON.stringify(message.created_at)}-${message.sender_id}-${message.conversation_id}-${message.content}`}
       className={`m-2 flex ${isOwnMessage ? 'justify-start' : 'justify-end'}`}
     >
       <fieldset className='border-red-500" flex max-w-[70%] flex-col gap-1 break-words rounded border-2 bg-base-light p-2'>

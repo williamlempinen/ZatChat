@@ -28,6 +28,16 @@ apiClient.interceptors.request.use(
     return config
   },
   (error) => {
+    const { refreshTokens, logout } = useAuth()
+
+    const originalRequest = error.config
+
+    console.log('%c[ORIGINAL REQUEST]: ', 'color: #fff; font-weight: bold;', originalRequest)
+
+    if (error.response.status === 401) {
+      //refreshTokens()
+      logout()
+    }
     console.error('%c[REQUEST ERROR]', 'color: #e74c3c; font-weight: bold;', error)
     return Promise.reject(error)
   },

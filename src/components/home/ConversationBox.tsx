@@ -12,7 +12,9 @@ type ConversationBoxProps = {
 }
 
 const ConversationBox = ({ conversation }: ConversationBoxProps) => {
-  const { user, logout } = useAuth()
+  const [isErrorOpeningConnection, setIsErrorOpeningConnection] = React.useState<boolean>(false)
+
+  const { logout } = useAuth()
 
   const navigate = useNavigate()
 
@@ -23,13 +25,19 @@ const ConversationBox = ({ conversation }: ConversationBoxProps) => {
 
   const openConversation = () => {
     const token = Cookies.get('accessToken')
+
     if (!token) {
-      console.log('NO TOKEN FOUND')
       logout()
       return
     }
-    // connecting is missing error handling on cases if connection is not successful
-    connectWebSocket(token)
+
+    const ws = connectWebSocket(token)
+    if (!ws) {
+      setIsErrorOpeningConnection(true)
+      return
+    }
+
+    console.log('WS: ', ws)
     navigate(`/conversation/?conversation-id=${conversation.id}`, { state: { conversation } })
   }
 
@@ -50,6 +58,9 @@ const ConversationBox = ({ conversation }: ConversationBoxProps) => {
           ))}
           {conversation.participants.length > 3 && <span>...</span>}
         </div>
+      )}
+      {isErrorOpeningConnection && (
+        <p>Oops... error occured when trying to establish connection to conversation</p>
       )}
     </div>
   )

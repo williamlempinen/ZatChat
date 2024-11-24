@@ -23,7 +23,6 @@ const PreviousConversations = () => {
 
   const handlePreviousConversations = async () => {
     if (conversationsPageNumber > totalPages) return []
-    console.log('GOING FOR A QUERY')
 
     const response = await getConversations(user.id, conversationsPageNumber)
 

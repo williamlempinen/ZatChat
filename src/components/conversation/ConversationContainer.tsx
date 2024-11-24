@@ -1,18 +1,20 @@
 import * as React from 'react'
-import { Conversation } from '../../types/types'
-import { useLocation } from 'react-router-dom'
+import { Conversation, Message } from '../../types/types'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
-import PrimaryButton from '../ui/PrimaryButton'
 import MessageBox from './MessageBox'
 import InputMessageArea from './InputMessageArea'
 import { format } from 'date-fns'
+import { useChat } from '../../lib/webSocket/ChatContext'
 
 const ConversationContainer = () => {
   const [messagesPageNumber, setMessagesPageNumber] = React.useState<number>(2)
   const [hasNextPage, setHasNextPage] = React.useState<boolean>(true)
   const [totalPages, setTotalPages] = React.useState<number>(1)
 
+  const navigate = useNavigate()
   const location = useLocation()
+
   const [conversationData, setConversationData] = React.useState<Conversation>(
     location.state?.conversation as Conversation,
   )
@@ -20,6 +22,8 @@ const ConversationContainer = () => {
   const messageContainerRef = React.useRef<HTMLDivElement | null>(null)
 
   const { getMessages } = nodeServerApi()
+
+  const { isConnectionError } = useChat()
 
   const getOlderMessages = async () => {
     if (!hasNextPage) return
@@ -63,6 +67,8 @@ const ConversationContainer = () => {
     console.log('INITIAL MESSAGES: ', conversationData.messages)
 
     console.log('SEARCH PARAMS: ', searchParams, ' CONVO ID: ', conversationId)
+
+    navigate(`/conversation/?conversation-id=${conversationId}`)
   }, [])
 
   const handleScroll = () => {
@@ -77,6 +83,14 @@ const ConversationContainer = () => {
     return user
   }
 
+  const updateConversationOptimistically = (newMessage: Message) => {
+    setConversationData((prev) => ({
+      ...prev,
+      messages: [newMessage, ...prev.messages],
+    }))
+  }
+
+  // TODO: ERROR HANDLING
   return (
     <div className="flex h-[60rem] w-full flex-grow flex-col border-2 border-white p-4">
       <div className="h-12 border-b border-gray-300">
@@ -97,12 +111,13 @@ const ConversationContainer = () => {
             Group created at: {format(conversationData.created_at, 'dd-MM-yyyy')}
           </p>
         )}
+        {isConnectionError && <p>ERROR IN WEBSOCKET CONNECTION</p>}
         <div className="flex w-full flex-col-reverse">
           {conversationData.messages.map((m) => (
             <MessageBox message={m} senderUser={passUser(m.sender_id)} />
           ))}
         </div>
-        <InputMessageArea />
+        <InputMessageArea updateConversation={updateConversationOptimistically} />
       </div>
     </div>
   )

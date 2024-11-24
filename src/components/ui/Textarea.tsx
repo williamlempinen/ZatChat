@@ -28,7 +28,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     }
 
     return (
-      <div className={cn('flex w-full flex-col', isError && 'rounded border-2 border-error')}>
+      <div className={cn('flex w-full flex-col', isError && 'rounded border-b-2 border-error')}>
         <textarea
           ref={textareaRef}
           className={cn(
@@ -37,8 +37,8 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             className,
           )}
           onInput={handleInput}
-          {...props}
           style={{ minHeight: 'calc(2 * 1.5rem)', maxHeight: 'calc(10 * 1.5rem)' }}
+          {...props}
         ></textarea>
         {isError && errorMessage && (
           <p className="mt-1 self-center text-sm text-error">{errorMessage}</p>

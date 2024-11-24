@@ -3,26 +3,34 @@ import { useChat } from '../../lib/webSocket/ChatContext'
 import { Message } from '../../types/types'
 import PrimaryButton from '../ui/PrimaryButton'
 import Textarea from '../ui/Textarea'
+import { useAuth } from '../../lib/AuthContext'
 
-const InputMessageArea = () => {
+type InputMessageAreaProps = {
+  updateConversation: (message: Message) => void
+}
+
+const InputMessageArea = ({ updateConversation }: InputMessageAreaProps) => {
   const [textValue, setTextValue] = React.useState<string>('')
 
-  const { sendMessage } = useChat()
+  const { sendMessage, conversationId, isSendingMessageError } = useChat()
 
-  const to = '14'
-  const message: Message = {
-    content: 'Sika nauta vieti, sika nauta vieti aj jauheliha kastiketta perunoiden kanssa',
-    conversation_id: 14,
-    created_at: Date.prototype,
-    id: 99,
-    is_seen: false,
-    sender_id: 6,
-  }
+  const { user } = useAuth()
 
   const handleSendMessage = () => {
     if (textValue.trim() === '') return
 
-    sendMessage(to, message)
+    const message = {
+      content: textValue.trim(),
+      conversation_id: parseInt(conversationId),
+      created_at: new Date(),
+      id: Date.now(),
+      is_seen: false,
+      sender_id: user.id,
+    }
+
+    sendMessage(message)
+    setTextValue('')
+    updateConversation(message)
   }
 
   const handleSendMessageByEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -34,14 +42,15 @@ const InputMessageArea = () => {
   }
 
   return (
-    <div className="flex w-full justify-center gap-1">
+    <div className="mt-8 flex w-full justify-center gap-1">
       <p>Icon</p>
       <Textarea
         value={textValue}
         onChange={(e) => setTextValue(e.target.value)}
         onKeyDown={handleSendMessageByEnter}
+        isError={isSendingMessageError}
+        errorMessage="Error occurred when trying to send message"
       />
-      <PrimaryButton displayText="Send" onClick={sendMessage(to, message)} />
       <p>Icon</p>
     </div>
   )
