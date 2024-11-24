@@ -17,7 +17,7 @@ const InputMessageArea = () => {
   }
 
   return (
-    <div className="flex gap-1">
+    <div className="flex w-full justify-center gap-1">
       <p>Icon</p>
       <Textarea />
       <PrimaryButton displayText="Send" onClick={sendMessage(to, message)} />

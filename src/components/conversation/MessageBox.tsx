@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Message, Participant } from '../../types/types'
-import { format } from 'date-fns'
 import { useAuth } from '../../lib/AuthContext'
+import { formatTime } from '../../lib/utils'
 
 type MessageBoxProps = {
   message: Message
@@ -22,7 +22,8 @@ const MessageBox = ({ message, senderUser }: MessageBoxProps) => {
         <legend className="text-hl">{senderUser.username}</legend>
         <p className="break-words">{message.content}</p>
         <p>{message.sender_id}</p>
-        <p>{format(message.created_at, 'dd-MM-yyyy')}</p>
+        <p>{formatTime('dates', message.created_at)}</p>
+        <p>Is this message seen: {message.is_seen ? 'yes' : 'no'}</p>
       </fieldset>
     </div>
   )

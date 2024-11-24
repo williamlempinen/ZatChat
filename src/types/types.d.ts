@@ -33,3 +33,5 @@ export type Message = {
   is_seen: boolean
   conversation_id: number
 }
+
+export type TimeVariantType = 'full' | 'dates' | 'times'

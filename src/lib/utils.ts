@@ -1,6 +1,8 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { ZodSchema } from 'zod'
+import { TimeVariantType } from '../types/types'
+import { format } from 'date-fns'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -20,4 +22,16 @@ export const validator = <T>(schema: ZodSchema<T>, data: T) => {
   }
 
   return { isValid: true, errors }
+}
+
+export const formatTime = (variant: TimeVariantType = 'full', timeStamp: Date) => {
+  if (variant === 'dates') {
+    return format(timeStamp, 'EEE / MMM')
+  }
+
+  if (variant === 'times') {
+    return format(timeStamp, 'kk:mm')
+  }
+
+  return format(timeStamp, 'do MMM YYYY')
 }

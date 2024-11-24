@@ -78,7 +78,7 @@ const ConversationContainer = () => {
   }
 
   return (
-    <div className="flex max-h-[80rem] w-full flex-grow flex-col border-2 border-white p-4">
+    <div className="flex h-[60rem] w-full flex-grow flex-col border-2 border-white p-4">
       <div className="h-12 border-b border-gray-300">
         <p className="text-xl font-bold">{conversationData.group_name}</p>
       </div>
@@ -102,11 +102,7 @@ const ConversationContainer = () => {
             <MessageBox message={m} senderUser={passUser(m.sender_id)} />
           ))}
         </div>
-        {conversationData.messages.length === 30 && hasNextPage && (
-          <div className="self-center">
-            <PrimaryButton displayText="Get older messages" onClick={getOlderMessages} />
-          </div>
-        )}
+        <InputMessageArea />
       </div>
     </div>
   )
