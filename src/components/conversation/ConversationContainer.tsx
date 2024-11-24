@@ -23,7 +23,7 @@ const ConversationContainer = () => {
 
   const { getMessages } = nodeServerApi()
 
-  const { isConnectionError } = useChat()
+  const { isConnectionError, isSendingMessageError, isConnected } = useChat()
 
   const getOlderMessages = async () => {
     if (!hasNextPage) return
@@ -111,14 +111,17 @@ const ConversationContainer = () => {
             Group created at: {format(conversationData.created_at, 'dd-MM-yyyy')}
           </p>
         )}
-        {isConnectionError && <p>ERROR IN WEBSOCKET CONNECTION</p>}
         <div className="flex w-full flex-col-reverse">
           {conversationData.messages.map((m) => (
             <MessageBox message={m} senderUser={passUser(m.sender_id)} />
           ))}
         </div>
-        <InputMessageArea updateConversation={updateConversationOptimistically} />
+        {isConnectionError && <p>ERROR IN WEBSOCKET CONNECTION</p>}
+        <p>{isConnected}</p>
+        <p>{isConnectionError}</p>
+        <p>{isSendingMessageError}</p>
       </div>
+      <InputMessageArea updateConversation={updateConversationOptimistically} />
     </div>
   )
 }

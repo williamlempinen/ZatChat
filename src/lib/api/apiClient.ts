@@ -1,6 +1,5 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import { useAuth } from '../AuthContext'
 
 const apiClient = axios.create({
   baseURL: '/api',
@@ -28,15 +27,12 @@ apiClient.interceptors.request.use(
     return config
   },
   (error) => {
-    const { refreshTokens, logout } = useAuth()
-
     const originalRequest = error.config
 
     console.log('%c[ORIGINAL REQUEST]: ', 'color: #fff; font-weight: bold;', originalRequest)
 
     if (error.response.status === 401) {
-      //refreshTokens()
-      logout()
+      // logout impl
     }
     console.error('%c[REQUEST ERROR]', 'color: #e74c3c; font-weight: bold;', error)
     return Promise.reject(error)
@@ -59,15 +55,12 @@ apiClient.interceptors.response.use(
     return response
   },
   (error) => {
-    const { refreshTokens, logout } = useAuth()
-
     const originalRequest = error.config
 
     console.log('%c[ORIGINAL REQUEST]: ', 'color: #fff; font-weight: bold;', originalRequest)
 
     if (error.response.status === 401) {
-      //refreshTokens()
-      logout()
+      // logout impl
     }
 
     if (error.response) {

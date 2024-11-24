@@ -64,6 +64,7 @@ export const ChatProvider = ({ children }: React.PropsWithChildren) => {
     ws.onerror = (error) => {
       console.error('WebSocket error (via ChatContext):', error)
       setIsConnected(false)
+      setIsConnectionError(true)
       setIsSendingMessageError(true)
     }
 

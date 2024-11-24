@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { useChat } from '../../lib/webSocket/ChatContext'
 import { Message } from '../../types/types'
-import PrimaryButton from '../ui/PrimaryButton'
 import Textarea from '../ui/Textarea'
 import { useAuth } from '../../lib/AuthContext'
 
@@ -30,7 +29,10 @@ const InputMessageArea = ({ updateConversation }: InputMessageAreaProps) => {
 
     sendMessage(message)
     setTextValue('')
-    updateConversation(message)
+
+    if (!isSendingMessageError) {
+      updateConversation(message)
+    }
   }
 
   const handleSendMessageByEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
