@@ -2,10 +2,9 @@ import Cookies from 'js-cookie'
 import { Message } from '../../types/types'
 import * as React from 'react'
 import connectWebSocket from './webSocketClient'
-import { useLocation, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 
 type ChatContextProps = {
-  // temp
   sendMessage: (content: Message) => void
   closeConversation: () => void
   isConnected: boolean
@@ -65,21 +64,24 @@ export const ChatProvider = ({ children }: React.PropsWithChildren) => {
       console.error('WebSocket error (via ChatContext):', error)
       setIsConnected(false)
       setIsConnectionError(true)
-      setIsSendingMessageError(true)
     }
 
     return () => {
       closeConversation()
     }
-  }, [])
+  }, [isConnected])
 
   const closeConversation = () => {
+    console.log('WEBSOCKET CLOSING')
     if (!ws) return
     ws.close()
+    setWs(null)
+    console.log('WEBSOCKET CLOSED')
   }
 
   const sendMessage = (newMessage: Message) => {
     if (!ws) {
+      setIsSendingMessageError(true)
       console.error('Cannot send message: WebSocket is not initialized')
       return
     }

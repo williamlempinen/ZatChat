@@ -16,9 +16,9 @@ const MessageBox = ({ message, senderUser }: MessageBoxProps) => {
   return (
     <div
       key={`${JSON.stringify(message.created_at)}-${message.sender_id}-${message.conversation_id}-${message.content}`}
-      className={`m-2 flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}
+      className={cn('m-2 flex', isOwnMessage ? 'justify-end' : 'justify-start')}
     >
-      <fieldset className='border-red-500" flex max-w-[70%] flex-col gap-1 break-words rounded border-2 bg-base-light p-2'>
+      <fieldset className='border-red-500" flex max-w-[70%] flex-col gap-1 break-words rounded border-2 bg-base-light p-2 shadow-md shadow-t'>
         <legend className={cn('px-1 font-bold text-shl', isOwnMessage ? 'text-shl' : 'text-hl')}>
           {senderUser.username}
         </legend>

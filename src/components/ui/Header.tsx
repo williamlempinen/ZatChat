@@ -17,7 +17,7 @@ const Header = () => {
         </h1>
         {isAuthenticated && (
           <PrimaryButton
-            className="bg-secondary text-gray-dark hover:bg-secondary-dark"
+            className="bg-secondary text-white hover:bg-secondary-dark"
             displayText="Logout"
             onClick={logout}
           />

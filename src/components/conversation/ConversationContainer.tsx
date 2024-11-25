@@ -64,12 +64,8 @@ const ConversationContainer = () => {
       container.scrollTop = container.scrollHeight
     }
 
-    console.log('INITIAL MESSAGES: ', conversationData.messages)
-
-    console.log('SEARCH PARAMS: ', searchParams, ' CONVO ID: ', conversationId)
-
     navigate(`/conversation/?conversation-id=${conversationId}`)
-  }, [])
+  }, [conversationData.messages.length])
 
   const handleScroll = () => {
     const container = messageContainerRef.current
@@ -88,13 +84,20 @@ const ConversationContainer = () => {
       ...prev,
       messages: [newMessage, ...prev.messages],
     }))
+
+    setTimeout(() => {
+      const container = messageContainerRef.current
+      if (container) {
+        container.scrollTop = container.scrollHeight
+      }
+    }, 0)
   }
 
   // TODO: ERROR HANDLING
   return (
-    <div className="flex h-[60rem] w-full flex-grow flex-col border-2 border-white p-4">
-      <div className="h-12 border-b border-gray-300">
-        <p className="text-xl font-bold">{conversationData.group_name}</p>
+    <div className="flex h-[60rem] w-full flex-grow flex-col p-4">
+      <div className="h-12 border-b-4 border-white">
+        <p className="text-xl font-bold text-secondary">{conversationData.group_name}</p>
       </div>
       <div
         className="no-scrollbar flex h-full flex-col overflow-y-auto"
