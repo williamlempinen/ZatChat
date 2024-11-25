@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Message, Participant } from '../../types/types'
 import { useAuth } from '../../lib/AuthContext'
-import { formatTime } from '../../lib/utils'
+import { cn, formatTime } from '../../lib/utils'
 
 type MessageBoxProps = {
   message: Message
@@ -16,10 +16,12 @@ const MessageBox = ({ message, senderUser }: MessageBoxProps) => {
   return (
     <div
       key={`${JSON.stringify(message.created_at)}-${message.sender_id}-${message.conversation_id}-${message.content}`}
-      className={`m-2 flex ${isOwnMessage ? 'justify-start' : 'justify-end'}`}
+      className={`m-2 flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}
     >
       <fieldset className='border-red-500" flex max-w-[70%] flex-col gap-1 break-words rounded border-2 bg-base-light p-2'>
-        <legend className="text-hl">{senderUser.username}</legend>
+        <legend className={cn('px-1 font-bold text-shl', isOwnMessage ? 'text-shl' : 'text-hl')}>
+          {senderUser.username}
+        </legend>
         <p className="break-words">{message.content}</p>
         <p>{message.sender_id}</p>
         <p>{formatTime('dates', message.created_at)}</p>
