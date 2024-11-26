@@ -11,6 +11,7 @@ type ChatContextProps = {
   isConnectionError: boolean
   isSendingMessageError: boolean
   conversationId: string
+  onMessageReceived: (callback: (message: Message) => void) => void
 }
 
 const ChatContext = React.createContext<ChatContextProps>({} as ChatContextProps)
@@ -21,44 +22,55 @@ export const ChatProvider = ({ children }: React.PropsWithChildren) => {
   const [isConnectionError, setIsConnectionError] = React.useState<boolean>(false)
   const [isSendingMessageError, setIsSendingMessageError] = React.useState<boolean>(false)
   const [conversationId, setConversationId] = React.useState<string>('')
+  const [messageListener, setMessageListener] = React.useState<(message: Message) => void | null>()
 
   const token = Cookies.get('accessToken')
 
   const [searchParams] = useSearchParams()
 
   React.useEffect(() => {
-    const toId = searchParams.get('conversation-id')
-    setConversationId(toId || '')
-
+    const toId = searchParams.get('conversation-id') || ''
     if (!token || toId === '') return
 
-    const ws = connectWebSocket(token, toId)
+    setConversationId(toId)
 
-    if (!ws) {
+    const wsConnection = connectWebSocket(token, toId)
+
+    if (!wsConnection) {
       setIsConnectionError(true)
       return
     }
 
-    setWs(ws)
+    setWs(wsConnection)
 
-    ws.onopen = () => {
+    wsConnection.onopen = () => {
       console.log('WS CONNECTED (via ChatContext)')
       setIsConnected(true)
       setIsConnectionError(false)
       setIsSendingMessageError(false)
     }
 
-    ws.onclose = (event) => {
+    wsConnection.onclose = (event) => {
       console.log('WS CLOSED (via ChatContext)', event.reason || 'No reason provided')
       setIsConnected(false)
       setWs(null)
     }
 
-    ws.onmessage = (event) => {
-      console.log('WS GOT MESSAGE (via ChatContext):', event.data)
+    wsConnection.onmessage = (event) => {
+      try {
+        const received = JSON.parse(event.data)
+
+        console.log('RECEIVED DATA: ', JSON.parse(event.data))
+
+        if (received.type === 'success' && received.data) {
+          messageListener?.(received.data)
+        }
+      } catch (error: any) {
+        console.error('ERROR ON MESSAGE RECEIVING: ', error)
+      }
     }
 
-    ws.onerror = (error) => {
+    wsConnection.onerror = (error) => {
       console.error('WebSocket error (via ChatContext):', error)
       setIsConnected(false)
       setIsConnectionError(true)
@@ -67,7 +79,7 @@ export const ChatProvider = ({ children }: React.PropsWithChildren) => {
     return () => {
       closeConversation()
     }
-  }, [isConnected])
+  }, [token, searchParams, messageListener])
 
   const closeConversation = () => {
     console.log('WEBSOCKET CLOSING')
@@ -92,6 +104,10 @@ export const ChatProvider = ({ children }: React.PropsWithChildren) => {
     ws.send(JSON.stringify(newMessage))
   }
 
+  const onMessageReceived = React.useCallback((callback: (message: Message) => void) => {
+    setMessageListener(() => callback)
+  }, [])
+
   return (
     <ChatContext.Provider
       value={{
@@ -101,6 +117,7 @@ export const ChatProvider = ({ children }: React.PropsWithChildren) => {
         isConnectionError,
         isSendingMessageError,
         conversationId,
+        onMessageReceived,
       }}
     >
       {children}

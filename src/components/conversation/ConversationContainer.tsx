@@ -24,7 +24,7 @@ const ConversationContainer = () => {
 
   const { getMessages } = nodeServerApi()
 
-  const { isConnectionError, isSendingMessageError, isConnected } = useChat()
+  const { isConnectionError, isSendingMessageError, isConnected, onMessageReceived } = useChat()
 
   const getOlderMessages = async () => {
     if (!hasNextPage) return
@@ -57,6 +57,29 @@ const ConversationContainer = () => {
   }
 
   React.useEffect(() => {
+    const handleNewMessage = (newMessage: Message) => {
+      setConversationData((prev) => ({
+        ...prev,
+        messages: [newMessage, ...prev.messages],
+      }))
+
+      const container = messageContainerRef.current
+
+      if (container) {
+        setTimeout(() => {
+          container.scrollTop = container.scrollHeight
+        }, 0)
+      }
+    }
+
+    onMessageReceived(handleNewMessage)
+
+    return () => {
+      onMessageReceived(() => {})
+    }
+  }, [onMessageReceived])
+
+  React.useEffect(() => {
     const searchParams = new URLSearchParams(location.search)
     const conversationId = searchParams.get('conversation-id')
 
@@ -66,7 +89,7 @@ const ConversationContainer = () => {
     }
 
     navigate(`/conversation/?conversation-id=${conversationId}`)
-  }, [conversationData.messages.length])
+  }, [location.search])
 
   const handleScroll = () => {
     const container = messageContainerRef.current

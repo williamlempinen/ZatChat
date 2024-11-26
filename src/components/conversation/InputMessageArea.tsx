@@ -11,13 +11,14 @@ type InputMessageAreaProps = {
 const InputMessageArea = ({ updateConversation }: InputMessageAreaProps) => {
   const [textValue, setTextValue] = React.useState<string>('')
 
-  const { sendMessage, conversationId, isSendingMessageError } = useChat()
+  const { sendMessage, conversationId, isSendingMessageError, isConnectionError } = useChat()
 
   const { user } = useAuth()
 
   const handleSendMessage = () => {
     if (textValue.trim() === '') return
 
+    // send complete Message type to support optimistic updates
     const message = {
       content: textValue.trim(),
       conversation_id: parseInt(conversationId),
@@ -36,7 +37,7 @@ const InputMessageArea = ({ updateConversation }: InputMessageAreaProps) => {
   }
 
   const handleSendMessageByEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey && !isSendingMessageError && !isConnectionError) {
       console.log('ENTER PRESSED, SENDING MESSAGE')
       e.preventDefault()
       handleSendMessage()
