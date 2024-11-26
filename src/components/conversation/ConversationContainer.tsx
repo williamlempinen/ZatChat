@@ -6,6 +6,7 @@ import MessageBox from './MessageBox'
 import InputMessageArea from './InputMessageArea'
 import { format } from 'date-fns'
 import { useChat } from '../../lib/webSocket/ChatContext'
+import ErrorTypography from '../ui/ErrorTypography'
 
 const ConversationContainer = () => {
   const [messagesPageNumber, setMessagesPageNumber] = React.useState<number>(2)
@@ -115,11 +116,11 @@ const ConversationContainer = () => {
           </p>
         )}
         <div className="flex w-full flex-col-reverse">
+          {isConnectionError && <ErrorTypography errorMessage="Error connecting WebSocket" />}
           {conversationData.messages.map((m) => (
             <MessageBox message={m} senderUser={passUser(m.sender_id)} />
           ))}
         </div>
-        {isConnectionError && <p>ERROR IN WEBSOCKET CONNECTION</p>}
         <p>{isConnected}</p>
         <p>{isConnectionError}</p>
         <p>{isSendingMessageError}</p>

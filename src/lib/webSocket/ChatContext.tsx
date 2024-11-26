@@ -30,34 +30,32 @@ export const ChatProvider = ({ children }: React.PropsWithChildren) => {
     const toId = searchParams.get('conversation-id')
     setConversationId(toId || '')
 
-    if (!token) return
+    if (!token || toId === '') return
 
-    const ws = connectWebSocket(token)
+    const ws = connectWebSocket(token, toId)
 
     if (!ws) {
       setIsConnectionError(true)
       return
     }
+
     setWs(ws)
 
     ws.onopen = () => {
-      console.log('WebSocket connection established (via ChatContext)')
+      console.log('WS CONNECTED (via ChatContext)')
       setIsConnected(true)
       setIsConnectionError(false)
       setIsSendingMessageError(false)
     }
 
     ws.onclose = (event) => {
-      console.log(
-        'WebSocket connection closed (via ChatContext)',
-        event.reason || 'No reason provided',
-      )
+      console.log('WS CLOSED (via ChatContext)', event.reason || 'No reason provided')
       setIsConnected(false)
       setWs(null)
     }
 
     ws.onmessage = (event) => {
-      console.log('Message received (via ChatContext):', event.data)
+      console.log('WS GOT MESSAGE (via ChatContext):', event.data)
     }
 
     ws.onerror = (error) => {
