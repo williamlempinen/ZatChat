@@ -3,6 +3,8 @@ import { useChat } from '../../lib/webSocket/ChatContext'
 import { Message } from '../../types/types'
 import Textarea from '../ui/Textarea'
 import { useAuth } from '../../lib/AuthContext'
+import { GoPaperAirplane } from 'react-icons/go'
+import { GoMoveToTop } from 'react-icons/go'
 
 type InputMessageAreaProps = {
   updateConversation: (message: Message) => void
@@ -45,8 +47,8 @@ const InputMessageArea = ({ updateConversation }: InputMessageAreaProps) => {
   }
 
   return (
-    <div className="mt-8 flex w-full justify-center gap-1">
-      <p>Icon</p>
+    <div className="mt-8 flex w-full items-center justify-center gap-1">
+      <GoMoveToTop className="text-6xl font-bold text-secondary" />
       <Textarea
         value={textValue}
         onChange={(e) => setTextValue(e.target.value)}
@@ -54,7 +56,7 @@ const InputMessageArea = ({ updateConversation }: InputMessageAreaProps) => {
         isError={isSendingMessageError}
         errorMessage="Error occurred when trying to send message"
       />
-      <p>Icon</p>
+      <GoPaperAirplane className="text-6xl font-bold text-secondary" onClick={handleSendMessage} />
     </div>
   )
 }

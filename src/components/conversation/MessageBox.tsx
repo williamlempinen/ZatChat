@@ -23,8 +23,7 @@ const MessageBox = ({ message, senderUser }: MessageBoxProps) => {
           {senderUser.username}
         </legend>
         <p className="break-words">{message.content}</p>
-        <p>{message.sender_id}</p>
-        <p>{formatTime('dates', message.created_at)}</p>
+        <p className="text-sm text-t-sec">Sent: {formatTime('distance', message.created_at)}</p>
         <p>Is this message seen: {message.is_seen ? 'yes' : 'no'}</p>
       </fieldset>
     </div>

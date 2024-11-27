@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { ZodSchema } from 'zod'
 import { TimeVariantType } from '../types/types'
-import { format } from 'date-fns'
+import { format, formatDistanceToNow } from 'date-fns'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -25,6 +25,10 @@ export const validator = <T>(schema: ZodSchema<T>, data: T) => {
 }
 
 export const formatTime = (variant: TimeVariantType = 'full', timeStamp: Date) => {
+  if (variant === 'distance') {
+    return `${formatDistanceToNow(timeStamp)} ago`
+  }
+
   if (variant === 'dates') {
     return format(timeStamp, 'EEE / MMM')
   }
@@ -33,5 +37,5 @@ export const formatTime = (variant: TimeVariantType = 'full', timeStamp: Date) =
     return format(timeStamp, 'kk:mm')
   }
 
-  return format(timeStamp, 'do MMM YYYY')
+  return format(timeStamp, 'do MMM yyyy')
 }

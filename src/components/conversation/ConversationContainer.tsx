@@ -4,10 +4,10 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
 import MessageBox from './MessageBox'
 import InputMessageArea from './InputMessageArea'
-import { format } from 'date-fns'
 import { useChat } from '../../lib/webSocket/ChatContext'
 import ErrorTypography from '../ui/ErrorTypography'
 import { useAuth } from '../../lib/AuthContext'
+import { formatTime } from '../../lib/utils'
 
 const ConversationContainer = () => {
   const [messagesPageNumber, setMessagesPageNumber] = React.useState<number>(2)
@@ -28,6 +28,11 @@ const ConversationContainer = () => {
   const { isConnectionError, isSendingMessageError, isConnected, messages } = useChat()
 
   const { user } = useAuth()
+
+  const extractConversationName = (): string => {
+    if (!conversationData.group_name.includes('<>')) return conversationData.group_name
+    return conversationData.group_name.split('<>')[1].trim()
+  }
 
   const getOlderMessages = async () => {
     if (!hasNextPage) return
@@ -112,7 +117,7 @@ const ConversationContainer = () => {
   return (
     <div className="flex h-[60rem] w-full flex-grow flex-col p-4">
       <div className="h-12 border-b-4 border-white">
-        <p className="text-xl font-bold text-secondary">{conversationData.group_name}</p>
+        <p className="text-xl font-bold text-secondary">{extractConversationName()}</p>
         <div className="flex">
           {conversationData.participants.map((p) => (
             <p className="font-bold text-shl">
@@ -128,18 +133,18 @@ const ConversationContainer = () => {
         </div>
       </div>
       <div
-        className="no-scrollbar flex h-full flex-col overflow-y-auto"
+        className="no-scrollbar flex h-full flex-col overflow-y-auto scroll-smooth"
         ref={messageContainerRef}
         onScroll={handleScroll}
       >
         {!hasNextPage && !conversationData.is_group && (
           <p className="self-center text-t-sec">
-            Conversation created at: {format(conversationData.created_at, 'dd-MM-yyyy')}
+            Conversation created at: {formatTime('full', conversationData.created_at)}
           </p>
         )}
         {!hasNextPage && conversationData.is_group && (
           <p className="self-center text-t-sec">
-            Group created at: {format(conversationData.created_at, 'dd-MM-yyyy')}
+            Group created at: {formatTime('full', conversationData.created_at)}
           </p>
         )}
         <div className="flex w-full flex-col-reverse">

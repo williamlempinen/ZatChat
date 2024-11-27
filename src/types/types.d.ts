@@ -34,4 +34,4 @@ export type Message = {
   conversation_id: number
 }
 
-export type TimeVariantType = 'full' | 'dates' | 'times'
+export type TimeVariantType = 'full' | 'dates' | 'times' | 'distance'
