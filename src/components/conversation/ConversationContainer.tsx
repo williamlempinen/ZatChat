@@ -7,6 +7,7 @@ import InputMessageArea from './InputMessageArea'
 import { format } from 'date-fns'
 import { useChat } from '../../lib/webSocket/ChatContext'
 import ErrorTypography from '../ui/ErrorTypography'
+import { useAuth } from '../../lib/AuthContext'
 
 const ConversationContainer = () => {
   const [messagesPageNumber, setMessagesPageNumber] = React.useState<number>(2)
@@ -24,7 +25,9 @@ const ConversationContainer = () => {
 
   const { getMessages } = nodeServerApi()
 
-  const { isConnectionError, isSendingMessageError, isConnected, onMessageReceived } = useChat()
+  const { isConnectionError, isSendingMessageError, isConnected, messages } = useChat()
+
+  const { user } = useAuth()
 
   const getOlderMessages = async () => {
     if (!hasNextPage) return
@@ -56,28 +59,26 @@ const ConversationContainer = () => {
     }, 0)
   }
 
-  React.useEffect(() => {
-    const handleNewMessage = (newMessage: Message) => {
-      setConversationData((prev) => ({
-        ...prev,
-        messages: [newMessage, ...prev.messages],
-      }))
+  const updateConversationOptimistically = (newMessage: Message) => {
+    setConversationData((prev) => ({
+      ...prev,
+      messages: [newMessage, ...prev.messages],
+    }))
 
+    setTimeout(() => {
       const container = messageContainerRef.current
-
       if (container) {
-        setTimeout(() => {
-          container.scrollTop = container.scrollHeight
-        }, 0)
+        container.scrollTop = container.scrollHeight
       }
-    }
+    }, 0)
+  }
 
-    onMessageReceived(handleNewMessage)
+  React.useEffect(() => {
+    const lastlyAdded = messages.pop()
+    if (!messages || !lastlyAdded) return
 
-    return () => {
-      onMessageReceived(() => {})
-    }
-  }, [onMessageReceived])
+    updateConversationOptimistically(lastlyAdded)
+  }, [messages])
 
   React.useEffect(() => {
     const searchParams = new URLSearchParams(location.search)
@@ -103,18 +104,8 @@ const ConversationContainer = () => {
     return user
   }
 
-  const updateConversationOptimistically = (newMessage: Message) => {
-    setConversationData((prev) => ({
-      ...prev,
-      messages: [newMessage, ...prev.messages],
-    }))
-
-    setTimeout(() => {
-      const container = messageContainerRef.current
-      if (container) {
-        container.scrollTop = container.scrollHeight
-      }
-    }, 0)
+  const isUserActive = (id: number): boolean => {
+    return user.id === id && user.isActive
   }
 
   // TODO: ERROR HANDLING
@@ -122,6 +113,19 @@ const ConversationContainer = () => {
     <div className="flex h-[60rem] w-full flex-grow flex-col p-4">
       <div className="h-12 border-b-4 border-white">
         <p className="text-xl font-bold text-secondary">{conversationData.group_name}</p>
+        <div className="flex">
+          {conversationData.participants.map((p) => (
+            <p className="font-bold text-shl">
+              | {p.username} - Is active:{' '}
+              {isUserActive(p.id) ? (
+                <span className="text-green-500">yes</span>
+              ) : (
+                <span className="text-error">no</span>
+              )}{' '}
+              |
+            </p>
+          ))}
+        </div>
       </div>
       <div
         className="no-scrollbar flex h-full flex-col overflow-y-auto"

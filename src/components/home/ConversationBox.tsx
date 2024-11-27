@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Conversation } from '../../types/types'
 import { useAuth } from '../../lib/AuthContext'
-import connectWebSocket from '../../lib/webSocket/webSocketClient'
 import Cookies from 'js-cookie'
 import { format } from 'date-fns'
 import { cn } from '../../lib/utils'
@@ -12,8 +11,6 @@ type ConversationBoxProps = {
 }
 
 const ConversationBox = ({ conversation }: ConversationBoxProps) => {
-  const [isErrorOpeningConnection, setIsErrorOpeningConnection] = React.useState<boolean>(false)
-
   const { logout } = useAuth()
 
   const navigate = useNavigate()
@@ -31,13 +28,6 @@ const ConversationBox = ({ conversation }: ConversationBoxProps) => {
       return
     }
 
-    const ws = connectWebSocket(token)
-    if (!ws) {
-      setIsErrorOpeningConnection(true)
-      return
-    }
-
-    console.log('WS: ', ws)
     navigate(`/conversation/?conversation-id=${conversation.id}`, { state: { conversation } })
   }
 
@@ -58,9 +48,6 @@ const ConversationBox = ({ conversation }: ConversationBoxProps) => {
           ))}
           {conversation.participants.length > 3 && <span>...</span>}
         </div>
-      )}
-      {isErrorOpeningConnection && (
-        <p>Oops... error occured when trying to establish connection to conversation</p>
       )}
     </div>
   )

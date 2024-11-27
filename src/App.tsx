@@ -5,6 +5,7 @@ import { PropsWithChildren } from 'react'
 import { useAuth } from './lib/AuthContext'
 import Home from './pages/Home'
 import Conversation from './pages/Conversation'
+import { ChatProvider } from './lib/webSocket/ChatContext'
 
 const PrivateRoute = ({ children }: PropsWithChildren) => {
   const { isAuthenticated } = useAuth()
@@ -41,7 +42,9 @@ const App = () => {
             path="/conversation/"
             element={
               <PrivateRoute>
-                <Conversation />
+                <ChatProvider>
+                  <Conversation />
+                </ChatProvider>
               </PrivateRoute>
             }
           />
