@@ -5,6 +5,7 @@ import Textarea from '../ui/Textarea'
 import { useAuth } from '../../lib/AuthContext'
 import { GoPaperAirplane } from 'react-icons/go'
 import { GoMoveToTop } from 'react-icons/go'
+import IconButton from '../ui/IconButton'
 
 type InputMessageAreaProps = {
   updateConversation: (message: Message) => void
@@ -47,8 +48,13 @@ const InputMessageArea = ({ updateConversation }: InputMessageAreaProps) => {
   }
 
   return (
-    <div className="mt-8 flex w-full items-center justify-center gap-1">
-      <GoMoveToTop className="text-6xl font-bold text-secondary" />
+    <div className="mt-8 flex w-full items-center justify-center gap-2">
+      <IconButton
+        icon={<GoMoveToTop />}
+        className="right-10 text-2xl"
+        tooltip="No implementation in here :)"
+        onClick={handleSendMessage}
+      />
       <Textarea
         value={textValue}
         onChange={(e) => setTextValue(e.target.value)}
@@ -56,7 +62,12 @@ const InputMessageArea = ({ updateConversation }: InputMessageAreaProps) => {
         isError={isSendingMessageError}
         errorMessage="Error occurred when trying to send message"
       />
-      <GoPaperAirplane className="text-6xl font-bold text-secondary" onClick={handleSendMessage} />
+      <IconButton
+        icon={<GoPaperAirplane />}
+        className="right-10 text-2xl"
+        tooltip="Send"
+        onClick={handleSendMessage}
+      />
     </div>
   )
 }
