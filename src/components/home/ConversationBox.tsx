@@ -3,7 +3,7 @@ import { Conversation } from '../../types/types'
 import { useAuth } from '../../lib/AuthContext'
 import Cookies from 'js-cookie'
 import { format } from 'date-fns'
-import { cn } from '../../lib/utils'
+import { cn, formatTime } from '../../lib/utils'
 import { useNavigate } from 'react-router-dom'
 
 type ConversationBoxProps = {
@@ -37,16 +37,16 @@ const ConversationBox = ({ conversation }: ConversationBoxProps) => {
       className={cn('my-1 grid grid-cols-2 rounded bg-base-dark p-2 shadow-md shadow-base-light')}
     >
       <p className="text-3xl font-bold">{extractConversationName()}</p>
-      <p className="font-bold underline">{`Last message: ${format(new Date(conversation.updated_at), 'kk:mm | dd-MM')}`}</p>
+      <p className="font-bold underline"> {formatTime('distance', conversation.updated_at)}</p>
       {conversation.is_group && (
         <div className="flex gap-1">
-          {conversation.participants.slice(0, 3).map((p, index) => (
-            <p key={p.id}>
-              {p.username}
-              {index < 2 ? ',' : ''}
-            </p>
-          ))}
-          {conversation.participants.length > 3 && <span>...</span>}
+          {conversation.participants[1] && (
+            <p className="text-t-sec">{conversation.participants[1].username}</p>
+          )}
+          {conversation.participants[2] && (
+            <p className="text-t-sec">, {conversation.participants[2].username}</p>
+          )}
+          {conversation.participants.length > 3 && <span className="text-t-sec">...</span>}
         </div>
       )}
     </div>

@@ -33,10 +33,7 @@ export const ChatProvider = ({ children }: React.PropsWithChildren) => {
     const toId = searchParams.get('conversation-id') || ''
 
     if (!token || toId === '' || toId === undefined) return
-    if (wsRef.current) {
-      console.log('Connection already exists')
-      return
-    }
+    if (wsRef.current) return
 
     setConversationId(toId)
 
@@ -50,22 +47,18 @@ export const ChatProvider = ({ children }: React.PropsWithChildren) => {
     wsRef.current = wsConnection
 
     wsConnection.onopen = () => {
-      console.log('WS CONNECTED (via ChatContext)')
       setIsConnected(true)
       setIsConnectionError(false)
       setIsSendingMessageError(false)
     }
 
     wsConnection.onclose = (event) => {
-      console.log('WS CLOSED (via ChatContext)', event || 'No reason provided')
       setIsConnected(false)
     }
 
     wsConnection.onmessage = (event) => {
       try {
         const received = JSON.parse(event.data)
-
-        console.log('RECEIVED DATA: ', JSON.parse(event.data))
 
         if (received.type === 'success' && received.data) {
           setMessages((prev) => [...prev, received.data])
@@ -76,32 +69,25 @@ export const ChatProvider = ({ children }: React.PropsWithChildren) => {
     }
 
     wsConnection.onerror = (error) => {
-      console.error('WebSocket error (via ChatContext):', error)
       setIsConnected(false)
       setIsConnectionError(true)
     }
   }, [token, searchParams])
 
   const closeConversation = () => {
-    console.log('WEBSOCKET CLOSING')
     if (!wsRef.current) return
+
     wsRef.current.close()
     wsRef.current = null
-    console.log('WEBSOCKET CLOSED')
   }
 
   const sendMessage = (newMessage: Message) => {
     if (!wsRef.current) {
       setIsSendingMessageError(true)
-      console.error('Cannot send message: WebSocket is not initialized')
       return
     }
 
-    if (wsRef.current.readyState !== WebSocket.OPEN) {
-      console.error('Cannot send message: WebSocket is not open')
-      return
-    }
-    console.log('WS SENT MESSAGE')
+    if (wsRef.current.readyState !== WebSocket.OPEN) return
 
     wsRef.current.send(JSON.stringify(newMessage))
   }
