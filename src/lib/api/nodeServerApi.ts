@@ -31,6 +31,11 @@ export const nodeServerApi = () => {
     return response.data
   }
 
+  const updateMessagesAsSeen = async (conversationId: string) => {
+    const response = await apiClient.post('/conversation/update-messages', { conversationId })
+    return response.data
+  }
+
   return {
     postLogin,
     postSignup,
@@ -38,5 +43,6 @@ export const nodeServerApi = () => {
     postRefreshToken,
     getConversations,
     getMessages,
+    updateMessagesAsSeen,
   }
 }

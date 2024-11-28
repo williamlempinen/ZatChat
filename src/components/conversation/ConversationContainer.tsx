@@ -6,7 +6,6 @@ import MessageBox from './MessageBox'
 import InputMessageArea from './InputMessageArea'
 import { useChat } from '../../lib/webSocket/ChatContext'
 import ErrorTypography from '../ui/ErrorTypography'
-import { useAuth } from '../../lib/AuthContext'
 import { formatTime } from '../../lib/utils'
 
 const ConversationContainer = () => {
@@ -23,11 +22,9 @@ const ConversationContainer = () => {
 
   const messageContainerRef = React.useRef<HTMLDivElement | null>(null)
 
-  const { getMessages } = nodeServerApi()
+  const { getMessages, updateMessagesAsSeen } = nodeServerApi()
 
   const { isConnectionError, isSendingMessageError, isConnected, messages } = useChat()
-
-  const { user } = useAuth()
 
   const extractConversationName = (): string => {
     if (!conversationData.group_name.includes('<>')) return conversationData.group_name
@@ -76,6 +73,7 @@ const ConversationContainer = () => {
         container.scrollTop = container.scrollHeight
       }
     }, 0)
+    updateMessagesAsSeen(JSON.stringify(conversationData.id))
   }
 
   React.useEffect(() => {
@@ -93,7 +91,7 @@ const ConversationContainer = () => {
     if (container) {
       container.scrollTop = container.scrollHeight
     }
-
+    updateMessagesAsSeen(JSON.stringify(conversationData.id))
     navigate(`/conversation/?conversation-id=${conversationId}`)
   }, [location.search])
 
@@ -109,10 +107,6 @@ const ConversationContainer = () => {
     return user
   }
 
-  const isUserActive = (id: number): boolean => {
-    return user.id === id && user.isActive
-  }
-
   // TODO: ERROR HANDLING
   return (
     <div className="flex h-[60rem] w-full flex-grow flex-col p-4">
@@ -122,7 +116,7 @@ const ConversationContainer = () => {
           {conversationData.participants.map((p) => (
             <p className="font-bold text-shl">
               | {p.username} - Is active:{' '}
-              {isUserActive(p.id) ? (
+              {p.is_active ? (
                 <span className="text-green-500">yes</span>
               ) : (
                 <span className="text-error">no</span>

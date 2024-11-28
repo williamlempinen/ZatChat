@@ -9,10 +9,10 @@ export type User = {
 }
 
 export type Participant = {
-  email: string
   id: number
-  profilePictureUrl: string | null
+  profile_picture_url: string
   username: string
+  is_active: boolean
 }
 
 export type Conversation = {

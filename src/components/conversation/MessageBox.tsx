@@ -1,11 +1,10 @@
-import * as React from 'react'
 import { Message, Participant } from '../../types/types'
 import { useAuth } from '../../lib/AuthContext'
 import { cn, formatTime } from '../../lib/utils'
 
 type MessageBoxProps = {
   message: Message
-  senderUser: Omit<Participant, 'email'>
+  senderUser: Participant
 }
 
 const MessageBox = ({ message, senderUser }: MessageBoxProps) => {

@@ -41,10 +41,13 @@ const InputMessageArea = ({ updateConversation }: InputMessageAreaProps) => {
 
   const handleSendMessageByEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey && !isSendingMessageError && !isConnectionError) {
-      console.log('ENTER PRESSED, SENDING MESSAGE')
       e.preventDefault()
       handleSendMessage()
     }
+  }
+
+  const handleAddAttachment = () => {
+    console.log('THIS FEATURE HAS NO IMPLEMENTATION :)')
   }
 
   return (
@@ -53,7 +56,7 @@ const InputMessageArea = ({ updateConversation }: InputMessageAreaProps) => {
         icon={<GoMoveToTop />}
         className="right-10 text-2xl"
         tooltip="No implementation in here :)"
-        onClick={handleSendMessage}
+        onClick={handleAddAttachment}
       />
       <Textarea
         value={textValue}
