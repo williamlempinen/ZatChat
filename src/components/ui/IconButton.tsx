@@ -8,6 +8,8 @@ interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
   disabled?: boolean
 }
 
+// create variant prop
+
 const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
   ({ icon, tooltip, isLoading, disabled, className, ...rest }, ref) => {
     return (

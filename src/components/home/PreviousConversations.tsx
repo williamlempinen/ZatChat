@@ -8,7 +8,7 @@ import PrimaryButton from '../ui/PrimaryButton'
 import Loading from '../ui/Loading'
 
 const Root = ({ children }: React.PropsWithChildren) => (
-  <div className="flex flex-col rounded border-2 border-hl p-2 shadow shadow-shl">{children}</div>
+  <div className="flex flex-col rounded bg-base-light p-2">{children}</div>
 )
 
 const PreviousConversations = () => {

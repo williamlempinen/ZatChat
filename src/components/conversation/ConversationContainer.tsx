@@ -111,20 +111,7 @@ const ConversationContainer = () => {
   return (
     <div className="flex h-[60rem] w-full flex-grow flex-col p-4">
       <div className="h-12 border-b-4 border-white">
-        <p className="text-xl font-bold text-secondary">{extractConversationName()}</p>
-        <div className="flex">
-          {conversationData.participants.map((p) => (
-            <p className="font-bold text-shl">
-              | {p.username} - Is active:{' '}
-              {p.is_active ? (
-                <span className="text-green-500">yes</span>
-              ) : (
-                <span className="text-error">no</span>
-              )}{' '}
-              |
-            </p>
-          ))}
-        </div>
+        <p className="text-xl font-bold text-shl">{extractConversationName()}</p>
       </div>
       <div
         className="no-scrollbar flex h-full flex-col overflow-y-auto scroll-smooth"

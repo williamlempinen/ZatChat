@@ -6,6 +6,8 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
   errorMessage?: string
 }
 
+// create variant prop
+
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, isError, errorMessage, ...props }, ref) => {
     const textareaRef = React.useRef<HTMLTextAreaElement | null>(null)

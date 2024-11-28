@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Conversation } from '../../types/types'
 import { useAuth } from '../../lib/AuthContext'
 import Cookies from 'js-cookie'
-import { format } from 'date-fns'
 import { cn, formatTime } from '../../lib/utils'
 import { useNavigate } from 'react-router-dom'
 
@@ -31,10 +30,14 @@ const ConversationBox = ({ conversation }: ConversationBoxProps) => {
     navigate(`/conversation/?conversation-id=${conversation.id}`, { state: { conversation } })
   }
 
+  // create css transformation
   return (
     <div
       onClick={() => openConversation()}
-      className={cn('my-1 grid grid-cols-2 rounded bg-base-dark p-2 shadow-md shadow-base-light')}
+      className={cn(
+        'my-1 grid grid-cols-2 rounded bg-base-dark p-2',
+        'hover:cursor-pointer hover:shadow hover:shadow-t-sec',
+      )}
     >
       <p className="text-3xl font-bold">{extractConversationName()}</p>
       <p className="font-bold underline"> {formatTime('distance', conversation.updated_at)}</p>

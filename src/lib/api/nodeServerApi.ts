@@ -36,6 +36,11 @@ export const nodeServerApi = () => {
     return response.data
   }
 
+  const searchUsers = async (query: string) => {
+    const response = await apiClient.get(`/users/search-users?query=${encodeURIComponent(query)}`)
+    return response.data
+  }
+
   return {
     postLogin,
     postSignup,
@@ -44,5 +49,6 @@ export const nodeServerApi = () => {
     getConversations,
     getMessages,
     updateMessagesAsSeen,
+    searchUsers,
   }
 }
