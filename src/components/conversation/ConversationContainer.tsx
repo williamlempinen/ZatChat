@@ -109,7 +109,7 @@ const ConversationContainer = () => {
 
   // TODO: ERROR HANDLING
   return (
-    <div className="flex h-[60rem] w-full flex-grow flex-col p-4">
+    <div className="flex h-[20rem] w-full flex-grow flex-col p-4">
       <div className="h-12 border-b-4 border-white">
         <p className="text-xl font-bold text-shl">{extractConversationName()}</p>
       </div>
@@ -128,11 +128,15 @@ const ConversationContainer = () => {
             Group created at: {formatTime('full', conversationData.created_at)}
           </p>
         )}
+        {conversationData.messages.length === 0 && (
+          <p className="mt-12 self-center text-t-sec">Be the first to send a message :)</p>
+        )}
         <div className="flex w-full flex-col-reverse">
           {isConnectionError && <ErrorTypography errorMessage="Error connecting WebSocket" />}
-          {conversationData.messages.map((m) => (
-            <MessageBox message={m} senderUser={passUser(m.sender_id)} />
-          ))}
+          {conversationData.messages.length > 0 &&
+            conversationData.messages.map((m) => (
+              <MessageBox message={m} senderUser={passUser(m.sender_id)} />
+            ))}
         </div>
         <p>{isConnected}</p>
         <p>{isConnectionError}</p>

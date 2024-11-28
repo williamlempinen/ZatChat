@@ -3,8 +3,12 @@ import { nodeServerApi } from '../lib/api/nodeServerApi'
 import { useAuth } from '../lib/AuthContext'
 import SearchUsers from '../components/home/SearchUsers'
 import PreviousConversations from '../components/home/PreviousConversations'
+import { useToggle } from '../hooks/useToggle'
+import { cn } from '../lib/utils'
 
 const Home = () => {
+  const { state: isConversations, toggle } = useToggle(true, false)
+
   const { testGetProtectedData } = nodeServerApi()
 
   const { user, refreshToken, refreshTokens } = useAuth()
@@ -28,11 +32,27 @@ const Home = () => {
   return (
     <div className="flex flex-col">
       <p className="text-bold text-2xl text-shl">Welcome {user.username}</p>
-      <p>Your previous conversations</p>
-      <hr className="text-shl" />
-      <PreviousConversations />
-      <p className="text-bold mt-8 text-2xl text-shl">Search for new users to chat with</p>
-      <SearchUsers />
+      <div className="flex h-8 w-full justify-evenly rounded-md">
+        <button className={cn('w-full shadow transition-colors duration-300')} onClick={toggle}>
+          Conversations
+        </button>
+        <button className={cn('w-full shadow transition-colors duration-300')} onClick={toggle}>
+          Search Users
+        </button>
+      </div>
+      {isConversations ? (
+        <>
+          <p>Your previous conversations</p>
+          <hr />
+          <PreviousConversations />
+        </>
+      ) : (
+        <>
+          <p>Search for new users to chat with</p>
+          <hr />
+          <SearchUsers />
+        </>
+      )}
 
       <button className="bg-base" onClick={test}>
         Test auth

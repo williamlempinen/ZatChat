@@ -1,3 +1,4 @@
+// this should be updated to have contacts
 export type User = {
   createdAt: string
   email: string

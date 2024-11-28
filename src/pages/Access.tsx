@@ -4,6 +4,7 @@ import Signup from '../components/access/Signup'
 import Login from '../components/access/Login'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../lib/AuthContext'
+import { cn } from '../lib/utils'
 
 const Access = () => {
   const { state: isSignup, toggle } = useToggle(false, true)
@@ -43,13 +44,21 @@ const Access = () => {
     <div className="flex w-full flex-col items-center gap-6 rounded bg-base-light p-4 pb-16 shadow">
       <div className="flex h-8 w-full justify-evenly rounded-md">
         <button
-          className={`w-full shadow transition-colors duration-300 ${location.pathname === '/login' ? 'bg-base-dark text-secondary' : 'bg-base-light text-t'}`}
+          className={cn(
+            'w-full shadow transition-colors duration-300',
+            location.pathname === '/login' ? 'bg-base-dark text-secondary' : 'bg-base-light text-t',
+          )}
           onClick={handleToggle}
         >
           Login
         </button>
         <button
-          className={`w-full shadow transition-colors duration-300 ${location.pathname === '/signup' ? 'bg-base-dark text-secondary' : 'bg-base-light text-t'}`}
+          className={cn(
+            'w-full shadow transition-colors duration-300',
+            location.pathname === '/signup'
+              ? 'bg-base-dark text-secondary'
+              : 'bg-base-light text-t',
+          )}
           onClick={handleToggle}
         >
           Signup
