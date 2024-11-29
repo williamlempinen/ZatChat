@@ -41,7 +41,7 @@ const SearchUsers = () => {
   }
 
   return (
-    <div className="flex w-full flex-col rounded bg-base-light p-2">
+    <div className="flex w-full flex-col">
       <Input
         type="text"
         name="search"
@@ -49,7 +49,6 @@ const SearchUsers = () => {
         placeholder="Search by username"
         onChange={handleQueryChange}
       />
-      <p>Results: </p>
       {isError && <ErrorTypography />}
       {isLoading && <Loading />}
       {!isError && !isLoading && (

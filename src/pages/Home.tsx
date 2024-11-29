@@ -35,7 +35,7 @@ const Home = () => {
       <div className="flex h-8 w-full justify-evenly rounded-md">
         <button
           className={cn(
-            'w-full shadow transition-colors duration-300',
+            'w-full rounded-bl rounded-tl shadow transition-colors duration-300',
             isConversations ? 'bg-base-dark text-secondary' : 'bg-base-light text-t',
           )}
           onClick={toggle}
@@ -44,7 +44,7 @@ const Home = () => {
         </button>
         <button
           className={cn(
-            'w-full shadow transition-colors duration-300',
+            'w-full rounded-br rounded-tr shadow transition-colors duration-300',
             !isConversations ? 'bg-base-dark text-secondary' : 'bg-base-light text-t',
           )}
           onClick={toggle}

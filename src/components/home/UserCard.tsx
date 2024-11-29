@@ -1,20 +1,18 @@
+import * as React from 'react'
 import { useAuth } from '../../lib/AuthContext'
 import { cn, formatTime } from '../../lib/utils'
 import { User } from '../../types/types'
 import { GoSmiley } from 'react-icons/go'
+import ContactActionsModal from './ContactActionsModal'
 
 type UserCardProps = {
   searchedUser: User
 }
 
 const UserCard = ({ searchedUser }: UserCardProps) => {
+  const [isOpen, setIsOpen] = React.useState<boolean>(false)
+
   const { user } = useAuth()
-
-  const handleUserCardClick = () => {
-    console.log('SEARCHED USER: ', searchedUser)
-  }
-
-  console.log('S: ', searchedUser)
 
   if (searchedUser.id === user.id) return
 
@@ -24,8 +22,9 @@ const UserCard = ({ searchedUser }: UserCardProps) => {
         'grid w-full grid-cols-2 grid-rows-1 p-2 sm:grid-cols-3',
         'hover:cursor-pointer hover:shadow hover:shadow-t-sec',
       )}
-      onClick={handleUserCardClick}
+      onClick={() => setIsOpen(!isOpen)}
     >
+      <ContactActionsModal open={isOpen} close={() => setIsOpen(!isOpen)} user={searchedUser} />
       <div className="flex items-center gap-2">
         <div
           className={cn('h-3 w-3 rounded-full', searchedUser.is_active ? 'bg-success' : 'bg-error')}
