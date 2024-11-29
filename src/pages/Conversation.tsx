@@ -14,7 +14,7 @@ const Conversation = () => {
   }
 
   return (
-    <div className="flex h-full max-h-screen w-full flex-col gap-1">
+    <div className="flex h-full w-full flex-col gap-1">
       <div className="flex h-8 w-full items-start">
         <PrimaryButton displayText="Go Back" onClick={handleLeavingConversation} />
       </div>
