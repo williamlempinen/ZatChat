@@ -54,7 +54,8 @@ const SearchUsers = () => {
       {isLoading && <Loading />}
       {!isError && !isLoading && (
         <div className="flex w-full flex-col">
-          {results?.map((user) => <UserCard key={user.id} user={user} />)}
+          {results?.length === 0 && <p className="self-center text-shl">No results found :(</p>}
+          {results?.map((user) => <UserCard key={user.id} searchedUser={user} />)}
         </div>
       )}
     </div>

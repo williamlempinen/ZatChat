@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/ui/Layout'
 import Access from './pages/Access'
@@ -6,6 +7,7 @@ import { useAuth } from './lib/AuthContext'
 import Home from './pages/Home'
 import Conversation from './pages/Conversation'
 import { ChatProvider } from './lib/webSocket/ChatContext'
+import { setupApiClient } from './lib/api/apiClient'
 
 const PrivateRoute = ({ children }: PropsWithChildren) => {
   const { isAuthenticated } = useAuth()
@@ -16,6 +18,12 @@ const PrivateRoute = ({ children }: PropsWithChildren) => {
 }
 
 const App = () => {
+  const { logout } = useAuth()
+
+  React.useEffect(() => {
+    setupApiClient(logout)
+  }, [logout])
+
   return (
     <Router>
       <Layout>

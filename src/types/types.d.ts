@@ -1,10 +1,17 @@
-// this should be updated to have contacts
+export type Contact = {
+  id: number
+  user_id: number // refers to the user itself
+  contact_id: number // refers to the contact (not current user)
+  created_at: Date
+}
+
 export type User = {
-  createdAt: string
+  contacts: Contact[]
+  created_at: Date
   email: string
   id: number
-  isActive: boolean
-  profilePictureUrl: string | null
+  is_active: boolean
+  profile_picture_url: string | null
   role: 'REGULAR' | 'ADMIN'
   username: string
 }

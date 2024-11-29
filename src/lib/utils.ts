@@ -24,7 +24,13 @@ export const validator = <T>(schema: ZodSchema<T>, data: T) => {
   return { isValid: true, errors }
 }
 
-export const formatTime = (variant: TimeVariantType = 'full', timeStamp: Date) => {
+export const formatTime = (variant: TimeVariantType = 'full', timeStamp: Date | string) => {
+  const date = typeof timeStamp === 'string' ? new Date(timeStamp) : timeStamp
+
+  if (isNaN(date.getTime())) {
+    return 'Invalid date'
+  }
+
   if (variant === 'distance') {
     return `${formatDistanceToNow(timeStamp)} ago`
   }

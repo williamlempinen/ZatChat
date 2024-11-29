@@ -33,10 +33,22 @@ const Home = () => {
     <div className="flex flex-col">
       <p className="text-bold text-2xl text-shl">Welcome {user.username}</p>
       <div className="flex h-8 w-full justify-evenly rounded-md">
-        <button className={cn('w-full shadow transition-colors duration-300')} onClick={toggle}>
+        <button
+          className={cn(
+            'w-full shadow transition-colors duration-300',
+            isConversations ? 'bg-base-dark text-secondary' : 'bg-base-light text-t',
+          )}
+          onClick={toggle}
+        >
           Conversations
         </button>
-        <button className={cn('w-full shadow transition-colors duration-300')} onClick={toggle}>
+        <button
+          className={cn(
+            'w-full shadow transition-colors duration-300',
+            !isConversations ? 'bg-base-dark text-secondary' : 'bg-base-light text-t',
+          )}
+          onClick={toggle}
+        >
           Search Users
         </button>
       </div>

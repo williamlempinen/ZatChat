@@ -55,11 +55,12 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
       console.log('DATA2: ', data)
 
       setUser({
-        createdAt: data.created_at,
+        contacts: data.contacts,
+        created_at: data.created_at,
         email: data.email,
         id: data.id,
-        isActive: data.is_active,
-        profilePictureUrl: data.profile_picture_url,
+        is_active: data.is_active,
+        profile_picture_url: data.profile_picture_url,
         role: data.role,
         username: data.username,
       })
@@ -125,11 +126,12 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
     Cookies.set('sessionId', data.sessionId)
 
     setUser({
-      createdAt: data.user.created_at,
+      contacts: data.contacts,
+      created_at: data.user.created_at,
       email: data.user.email,
       id: data.user.id,
-      isActive: data.user.is_active,
-      profilePictureUrl: data.user.profile_picture_url,
+      is_active: data.user.is_active,
+      profile_picture_url: data.user.profile_picture_url,
       role: data.user.role,
       username: data.user.username,
     })

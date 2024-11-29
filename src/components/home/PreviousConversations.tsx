@@ -6,6 +6,7 @@ import { useAuth } from '../../lib/AuthContext'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
 import PrimaryButton from '../ui/PrimaryButton'
 import Loading from '../ui/Loading'
+import ErrorTypography from '../ui/ErrorTypography'
 
 const Root = ({ children }: React.PropsWithChildren) => (
   <div className="flex flex-col rounded bg-base-light p-2">{children}</div>
@@ -31,6 +32,7 @@ const PreviousConversations = () => {
     } else {
       setHasNextPage(false)
     }
+
     setTotalPages(response.data.totalPages)
     setConversationsPageNumber((prev) => prev + 1)
     setConversations((prev) => [...prev, ...response.data.data])
@@ -65,7 +67,7 @@ const PreviousConversations = () => {
   if (isError) {
     return (
       <Root>
-        <span>Oops... this is error is from our side</span>
+        <ErrorTypography />
       </Root>
     )
   }
