@@ -7,6 +7,7 @@ import InputMessageArea from './InputMessageArea'
 import { useChat } from '../../lib/webSocket/ChatContext'
 import ErrorTypography from '../ui/ErrorTypography'
 import { formatTime } from '../../lib/utils'
+import Loading from '../ui/Loading'
 
 const ConversationContainer = () => {
   const [messagesPageNumber, setMessagesPageNumber] = React.useState<number>(2)
@@ -27,8 +28,8 @@ const ConversationContainer = () => {
   const { isConnectionError, isSendingMessageError, isConnected, messages } = useChat()
 
   const extractConversationName = (): string => {
-    if (!conversationData.group_name.includes('<>')) return conversationData.group_name
-    return conversationData.group_name.split('<>')[1].trim()
+    if (!conversationData?.group_name?.includes('<>')) return conversationData.group_name
+    return conversationData?.group_name?.split('<>')[1].trim()
   }
 
   const getOlderMessages = async () => {
@@ -73,7 +74,10 @@ const ConversationContainer = () => {
         container.scrollTop = container.scrollHeight
       }
     }, 0)
-    updateMessagesAsSeen(JSON.stringify(conversationData.id))
+
+    if (conversationData.id) {
+      updateMessagesAsSeen(JSON.stringify(conversationData.id))
+    }
   }
 
   React.useEffect(() => {
@@ -91,7 +95,11 @@ const ConversationContainer = () => {
     if (container) {
       container.scrollTop = container.scrollHeight
     }
-    updateMessagesAsSeen(JSON.stringify(conversationData.id))
+
+    if (conversationData.id) {
+      updateMessagesAsSeen(JSON.stringify(conversationData.id))
+    }
+
     navigate(`/conversation/?conversation-id=${conversationId}`)
   }, [location.search])
 
@@ -128,7 +136,7 @@ const ConversationContainer = () => {
             Group created at: {formatTime('full', conversationData.created_at)}
           </p>
         )}
-        {conversationData.messages.length === 0 && (
+        {conversationData?.messages?.length === 0 && (
           <p className="mt-12 self-center text-t-sec">Be the first to send a message :)</p>
         )}
         <div className="flex w-full flex-col-reverse">
@@ -138,7 +146,6 @@ const ConversationContainer = () => {
               <MessageBox message={m} senderUser={passUser(m.sender_id)} />
             ))}
         </div>
-        <p>{isConnected}</p>
         <p>{isConnectionError}</p>
         <p>{isSendingMessageError}</p>
       </div>

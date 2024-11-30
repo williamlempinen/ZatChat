@@ -33,7 +33,7 @@ const ConversationBox = ({ conversation }: ConversationBoxProps) => {
   // create css transformation
   return (
     <div
-      onClick={() => openConversation()}
+      onClick={openConversation}
       className={cn(
         'my-1 grid grid-cols-2 rounded bg-base-dark p-2',
         'hover:cursor-pointer hover:shadow hover:shadow-t-sec',

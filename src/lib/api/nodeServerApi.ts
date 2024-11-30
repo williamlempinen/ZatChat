@@ -41,6 +41,29 @@ export const nodeServerApi = () => {
     return response.data
   }
 
+  const getConversation = async (id: number) => {
+    const response = await apiClient.get(`/conversation/get-conversation/${id}`)
+    return response.data
+  }
+
+  const getPrivateConversationId = async (oneId: number, secId: number) => {
+    const response = await apiClient.get(`/conversation/get-conversation-id/${oneId}/${secId}`)
+    return response.data
+  }
+
+  const createConversation = async (
+    isGroup: boolean,
+    participants: string[],
+    groupName: string,
+  ) => {
+    const response = await apiClient.post(`/conversation/create-conversation`, {
+      isGroup,
+      participants,
+      groupName,
+    })
+    return response.data
+  }
+
   return {
     postLogin,
     postSignup,
@@ -50,5 +73,8 @@ export const nodeServerApi = () => {
     getMessages,
     updateMessagesAsSeen,
     searchUsers,
+    getPrivateConversationId,
+    createConversation,
+    getConversation,
   }
 }

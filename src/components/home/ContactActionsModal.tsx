@@ -6,6 +6,8 @@ import { GoCrossReference } from 'react-icons/go'
 import { GoCommentDiscussion } from 'react-icons/go'
 import { useAuth } from '../../lib/AuthContext'
 import PrimaryButton from '../ui/PrimaryButton'
+import { nodeServerApi } from '../../lib/api/nodeServerApi'
+import { useNavigate } from 'react-router-dom'
 
 type ContactActionsModalProps = {
   modalUser: User
@@ -21,10 +23,15 @@ enum ActionType {
 
 const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProps) => {
   const [actionView, setActionView] = React.useState<ActionType>(ActionType.CONTACTS)
+  const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
   const { user } = useAuth()
 
+  const navigate = useNavigate()
+
   const modalRef = React.useRef<HTMLDialogElement>(null)
+
+  const { getPrivateConversationId, createConversation, getConversation } = nodeServerApi()
 
   const handleClickOutside = (event: React.MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -33,16 +40,51 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
   }
 
   const isAlreadyContact = () => {
-    const ids = user.contacts.map((c) => c.id)
+    const ids = user?.contacts.map((c) => c.id)
     return ids.includes(modalUser.id)
   }
 
   const handleAddUserToContacts = () => {
     console.log('ADD USER')
+    console.log(user)
+    close()
   }
 
   const handleRemoveUserFromContacts = () => {
     console.log('REMOVE USER')
+    close()
+  }
+
+  // server could handle, this
+  // i.e. make only one request
+  // enables nice use of useQuery
+  const handleStartConversation = async () => {
+    setIsLoading(true)
+
+    const response = await getPrivateConversationId(user.id, modalUser.id)
+
+    if (!response.data) {
+      const createConversationResponse = await createConversation(
+        false,
+        [JSON.stringify(user.id), JSON.stringify(modalUser.id)],
+        '',
+      )
+      const data = createConversationResponse.data
+
+      setIsLoading(false)
+
+      navigate(`/conversation/?conversation-id=${data.id}`, {
+        state: { conversation: data },
+      })
+      return
+    }
+
+    const conversationData = await getConversation(response.data)
+
+    setIsLoading(false)
+    navigate(`/conversation/?conversation-id=${conversationData.data.id}`, {
+      state: { conversation: conversationData.data },
+    })
   }
 
   return (
@@ -111,22 +153,22 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
               </span>
             </button>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col p-2 sm:p-1">
             {actionView === ActionType.CONTACTS ? (
               <>
                 {isAlreadyContact() ? (
                   <div>
-                    <p>User {modalUser.username} is in your contacts</p>
-                    <p>Do you want to remove them from your contacts?</p>
+                    <p>User is in your contacts</p>
+                    <p>Want to remove them?</p>
                     <PrimaryButton
                       variant="error"
-                      displayText="Remove from contacts"
+                      displayText="Remove"
                       onClick={handleRemoveUserFromContacts}
                     />
                   </div>
                 ) : (
                   <>
-                    <p>Add user {modalUser.username} to your contacts</p>
+                    <p>Add user to your contacts</p>
                     <PrimaryButton
                       variant="yellow"
                       displayText="Add"
@@ -136,9 +178,18 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
                 )}
               </>
             ) : actionView === ActionType.CONVERSATION ? (
-              <p>Conversation</p>
+              <div>
+                <p>Start conversation with {modalUser.username}</p>
+
+                <PrimaryButton
+                  variant="yellow"
+                  displayText="Zat"
+                  isLoading={isLoading}
+                  onClick={handleStartConversation}
+                />
+              </div>
             ) : (
-              <p>add to conversation</p>
+              <p>add to {modalUser.username} to a group</p>
             )}
           </div>
         </dialog>
