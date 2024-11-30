@@ -215,16 +215,15 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
                 )}
               </>
             ) : actionView === ActionType.CONVERSATION ? (
-              <div>
-                <p>Start conversation with {modalUser.username}</p>
-
+              <>
+                <p>Start Zat with {modalUser.username}</p>
                 <PrimaryButton
                   variant="yellow"
                   displayText="Zat"
                   isLoading={isLoading}
                   onClick={handleStartConversation}
                 />
-              </div>
+              </>
             ) : (
               <p>add to {modalUser.username} to a group</p>
             )}

@@ -15,10 +15,10 @@ Server uses Express NodeJs
 
 ### todo
 
+- real-time handling of unread messages with websocket
 - fix auth/apiClient
 - change theme
 - add user to a group
 - contacts handling
-- unread messages (depends on db migration)
 - creating a group
 - hosting
