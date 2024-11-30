@@ -29,6 +29,7 @@ export type Conversation = {
   created_at: Date
   updated_at: Date
   group_name: string
+  unread_count: number
   messages: Message[]
   participants: Participant[]
 }
@@ -39,6 +40,7 @@ export type Message = {
   created_at: Date
   sender_id: number
   is_seen: boolean
+  is_seen_by: number[]
   conversation_id: number
 }
 

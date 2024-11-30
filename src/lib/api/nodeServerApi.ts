@@ -31,8 +31,11 @@ export const nodeServerApi = () => {
     return response.data
   }
 
-  const updateMessagesAsSeen = async (conversationId: string) => {
-    const response = await apiClient.post('/conversation/update-messages', { conversationId })
+  const updateMessagesAsSeen = async (conversationId: string, userId: string) => {
+    const response = await apiClient.post('/conversation/update-messages', {
+      conversationId,
+      userId,
+    })
     return response.data
   }
 

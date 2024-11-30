@@ -37,12 +37,18 @@ const ConversationBox = ({ conversation }: ConversationBoxProps) => {
     <div
       onClick={openConversation}
       className={cn(
-        'my-1 grid grid-cols-2 rounded bg-base-dark p-2',
+        'grib-cols-2 my-1 grid rounded bg-base-dark p-2 sm:grid-cols-3',
         'hover:cursor-pointer hover:shadow hover:shadow-t-sec',
       )}
     >
       <p className="text-3xl font-bold">{extractConversationName()}</p>
-      <p className="font-bold underline"> {formatTime('distance', conversation.updated_at)}</p>
+      <p className="hidden font-bold underline sm:block">
+        {' '}
+        {formatTime('distance', conversation.updated_at)}
+      </p>
+      <p className="mr-8 self-center justify-self-end text-2xl text-secondary">
+        {conversation.unread_count}
+      </p>
       {conversation.is_group && (
         <div className="flex gap-1">
           {conversation.participants[1] && (

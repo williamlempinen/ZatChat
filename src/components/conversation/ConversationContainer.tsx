@@ -81,7 +81,8 @@ const ConversationContainer = () => {
     }, 0)
 
     if (conversationData.id) {
-      updateMessagesAsSeen(JSON.stringify(conversationData.id))
+      console.log('UPDATING messages to seen')
+      updateMessagesAsSeen(JSON.stringify(conversationData.id), JSON.stringify(user.id))
     }
   }
 
@@ -102,7 +103,8 @@ const ConversationContainer = () => {
     }
 
     if (conversationData.id) {
-      updateMessagesAsSeen(JSON.stringify(conversationData.id))
+      console.log('UPDATING messages to seen')
+      updateMessagesAsSeen(JSON.stringify(conversationData.id), JSON.stringify(user.id))
     }
 
     navigate(`/conversation/?conversation-id=${conversationId}`)

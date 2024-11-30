@@ -52,6 +52,8 @@ const PreviousConversations = () => {
     queryFn: () => handlePreviousConversations(),
   })
 
+  console.log(conversations)
+
   // there is issues in loading
   // same loading is used with root and when fetching
   // more conversation

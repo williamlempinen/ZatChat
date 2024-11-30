@@ -44,7 +44,7 @@ const UserCard = ({ searchedUser }: UserCardProps) => {
         Joined {formatTime('distance', searchedUser.created_at)}
       </p>
       <span className={cn(isInContacts() ? 'text-success' : 'text-error', 'hidden sm:block')}>
-        {isInContacts() ? 'In contacts' : 'No a contact'}
+        {isInContacts() ? 'In contacts' : 'Not a contact'}
       </span>
       {searchedUser.profile_picture_url ? (
         <span>pic</span>

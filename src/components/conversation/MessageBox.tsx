@@ -15,6 +15,18 @@ const MessageBox = ({ message, senderUser }: MessageBoxProps) => {
 
   const isOnline = senderUser.is_active
 
+  const isMessageSeen = () => {
+    if (isOwnMessage) {
+      const seenByOthers = message.is_seen_by.filter((userId) => userId !== user.id)
+      return seenByOthers.length > 0
+    }
+
+    return message.is_seen_by.includes(user.id)
+  }
+  {
+    senderUser.username === 'testin-3' && console.log(message)
+  }
+
   return (
     <div
       key={`${JSON.stringify(message.created_at)}-${message.sender_id}-${message.conversation_id}-${message.content}`}
@@ -35,7 +47,7 @@ const MessageBox = ({ message, senderUser }: MessageBoxProps) => {
         </legend>
         <p className="break-words">{message.content}</p>
         <p className="text-sm text-t-sec">Sent: {formatTime('distance', message.created_at)}</p>
-        <p>Is this message seen: {message.is_seen ? 'yes' : 'no'}</p>
+        <p>Is this message seen: {isMessageSeen() ? 'yes' : 'no'}</p>
       </fieldset>
     </div>
   )

@@ -28,6 +28,7 @@ const InputMessageArea = ({ updateConversation }: InputMessageAreaProps) => {
       created_at: new Date(),
       id: Date.now(),
       is_seen: false,
+      is_seen_by: [],
       sender_id: user.id,
     }
 

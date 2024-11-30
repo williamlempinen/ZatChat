@@ -5,6 +5,7 @@ import SearchUsers from '../components/home/SearchUsers'
 import PreviousConversations from '../components/home/PreviousConversations'
 import { useToggle } from '../hooks/useToggle'
 import { cn } from '../lib/utils'
+import CreateGroup from '../components/home/CreateGroup'
 
 const Home = () => {
   const { state: isConversations, toggle } = useToggle(true, false)
@@ -54,9 +55,12 @@ const Home = () => {
       </div>
       {isConversations ? (
         <>
-          <p>Your previous conversations</p>
+          <p className="mt-4">Your previous conversations</p>
           <hr />
           <PreviousConversations />
+          <p className="mt-4">Create a group</p>
+          <hr />
+          <CreateGroup />
         </>
       ) : (
         <>
