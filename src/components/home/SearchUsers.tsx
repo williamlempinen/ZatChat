@@ -34,9 +34,6 @@ const SearchUsers = () => {
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
-    console.log('VAL: ', value)
-    console.log('DEFF: ', deferredQ)
-
     setQuery(value)
   }
 

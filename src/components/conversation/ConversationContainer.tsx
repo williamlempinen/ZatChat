@@ -81,7 +81,6 @@ const ConversationContainer = () => {
     }, 0)
 
     if (conversationData.id) {
-      console.log('UPDATING messages to seen')
       updateMessagesAsSeen(JSON.stringify(conversationData.id), JSON.stringify(user.id))
     }
   }
@@ -103,7 +102,6 @@ const ConversationContainer = () => {
     }
 
     if (conversationData.id) {
-      console.log('UPDATING messages to seen')
       updateMessagesAsSeen(JSON.stringify(conversationData.id), JSON.stringify(user.id))
     }
 
@@ -122,7 +120,6 @@ const ConversationContainer = () => {
     return user
   }
 
-  console.log('CONVERSSATION: ', conversationData)
   // TODO: ERROR HANDLING
   // no error handling if error occurs on sending message
   // conversation is still updated optimistically

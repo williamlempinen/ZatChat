@@ -32,8 +32,13 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
 
   const modalRef = React.useRef<HTMLDialogElement>(null)
 
-  const { getPrivateConversationId, createConversation, getConversation, postAddUserToContacts } =
-    nodeServerApi()
+  const {
+    getPrivateConversationId,
+    createConversation,
+    getConversation,
+    postAddUserToContacts,
+    postDeleteUserFromContacts,
+  } = nodeServerApi()
 
   const handleClickOutside = (event: React.MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -43,11 +48,24 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
 
   const {
     mutate: addUserContactResponse,
-    isPending: isLoadingAddContacts,
-    isError,
+    isPending: isLoadingAddContact,
+    isError: isAddContactError,
   } = useMutation({
-    mutationKey: ['add-user-to-contacts'],
+    mutationKey: [`add-user-to-contacts-${user.username}-${modalUser.username}`],
     mutationFn: () => postAddUserToContacts(JSON.stringify(user.id), JSON.stringify(modalUser.id)),
+    onSuccess: () => {
+      close()
+    },
+  })
+
+  const {
+    mutate: deleteUserFromResponse,
+    isPending: isLoadingDeleteContact,
+    isError: isDeleteContactError,
+  } = useMutation({
+    mutationKey: [`delete-user-from-contacts-${user.username}-${modalUser.username}`],
+    mutationFn: () =>
+      postDeleteUserFromContacts(JSON.stringify(user.id), JSON.stringify(modalUser.id)),
     onSuccess: () => {
       close()
     },
@@ -58,15 +76,16 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
     return ids.includes(modalUser.id)
   }
 
-  const handleAddUserToContacts = async () => {
-    console.log('ADD USER')
+  const handleContactActions = async () => {
+    if (isAlreadyContact()) {
+      console.log('DELETE CONTACT')
+      deleteUserFromResponse()
+      return
+    }
+
+    console.log('ADD CONTACT')
     console.log(user)
     addUserContactResponse()
-  }
-
-  const handleRemoveUserFromContacts = () => {
-    console.log('REMOVE USER')
-    close()
   }
 
   // server could handle, this
@@ -177,7 +196,9 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
                     <PrimaryButton
                       variant="error"
                       displayText="Remove"
-                      onClick={handleRemoveUserFromContacts}
+                      isLoading={isLoadingDeleteContact}
+                      isError={isDeleteContactError}
+                      onClick={handleContactActions}
                     />
                   </div>
                 ) : (
@@ -186,7 +207,9 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
                     <PrimaryButton
                       variant="yellow"
                       displayText="Add"
-                      onClick={handleAddUserToContacts}
+                      isLoading={isLoadingAddContact}
+                      isError={isAddContactError}
+                      onClick={handleContactActions}
                     />
                   </>
                 )}

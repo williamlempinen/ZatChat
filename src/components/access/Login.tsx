@@ -44,28 +44,16 @@ const Login = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    console.log('Submitting')
 
     const { isValid, errors } = validator(AccessSchema.login, credentials)
     setFormErrors(errors)
-    console.log('Errors: ', errors)
 
     if (!isValid) {
       console.log('Form not valid')
       return
     }
 
-    console.log('Form is valid')
-
     postLogin(credentials)
-
-    console.log('LOGIN SUCCESS')
-  }
-
-  const test = async () => {
-    console.log('testing')
-    const res = await testGetProtectedData()
-    console.log('res: ', res)
   }
 
   return (

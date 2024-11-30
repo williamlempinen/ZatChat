@@ -37,6 +37,7 @@ const UserCard = ({ searchedUser }: UserCardProps) => {
       />
       <div className="flex items-center gap-2">
         <div
+          title={searchedUser.is_active ? 'Online' : 'Offline'}
           className={cn('h-3 w-3 rounded-full', searchedUser.is_active ? 'bg-success' : 'bg-error')}
         ></div>
         <p className="font-bold text-secondary">{searchedUser.username}</p>

@@ -35,7 +35,6 @@ const Signup = () => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
-    console.log('Name: ', name, ', value: ', value)
 
     setCredentials((prev) => ({
       ...prev,
@@ -48,18 +47,13 @@ const Signup = () => {
 
     const { isValid, errors } = validator(AccessSchema.signup, credentials)
     setFormErrors(errors)
-    console.log('Errors: ', errors)
 
     if (!isValid) {
       console.log('Form not valid')
       return
     }
 
-    console.log('Form is valid')
-
     postSignup(credentials)
-
-    console.log('SIGNUP SUCCESS')
   }
 
   return (

@@ -73,6 +73,11 @@ export const nodeServerApi = () => {
     return response.data
   }
 
+  const postDeleteUserFromContacts = async (userId: string, contactId: string) => {
+    const response = await apiClient.post('/contact/delete-contact', { userId, contactId })
+    return response.data
+  }
+
   return {
     postLogin,
     postSignup,
@@ -86,5 +91,6 @@ export const nodeServerApi = () => {
     createConversation,
     getConversation,
     postAddUserToContacts,
+    postDeleteUserFromContacts,
   }
 }
