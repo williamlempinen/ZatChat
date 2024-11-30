@@ -46,7 +46,7 @@ const ConversationBox = ({ conversation }: ConversationBoxProps) => {
         {' '}
         {formatTime('distance', conversation.updated_at)}
       </p>
-      <p className="mr-8 self-center justify-self-end text-2xl text-secondary">
+      <p className="mr-8 self-center justify-self-end text-2xl text-secondary underline">
         {conversation.unread_count}
       </p>
       {conversation.is_group && (

@@ -122,6 +122,7 @@ const ConversationContainer = () => {
     return user
   }
 
+  console.log('CONVERSSATION: ', conversationData)
   // TODO: ERROR HANDLING
   // no error handling if error occurs on sending message
   // conversation is still updated optimistically

@@ -22,6 +22,20 @@ const PreviousConversations = () => {
 
   const { getConversations } = nodeServerApi()
 
+  // because of the conversation schema
+  const updateUnreadCounts = (conversations: Conversation[], userId: number) => {
+    return conversations.map((conversation) => {
+      const unreadCount = conversation.messages.filter(
+        (message) => !message.is_seen_by.includes(userId),
+      ).length
+
+      return {
+        ...conversation,
+        unread_count: unreadCount,
+      }
+    })
+  }
+
   const handlePreviousConversations = async () => {
     if (conversationsPageNumber > totalPages) return []
 
@@ -35,7 +49,10 @@ const PreviousConversations = () => {
 
     setTotalPages(response.data.totalPages)
     setConversationsPageNumber((prev) => prev + 1)
-    setConversations((prev) => [...prev, ...response.data.data])
+
+    const updatedConversations = updateUnreadCounts(response.data.data, user.id)
+
+    setConversations((prev) => [...prev, ...updatedConversations])
     // part of the comment below
     return []
   }

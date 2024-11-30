@@ -2,6 +2,7 @@ import { Message, Participant } from '../../types/types'
 import { useAuth } from '../../lib/AuthContext'
 import { cn, formatTime } from '../../lib/utils'
 import { GoPersonFill } from 'react-icons/go'
+import { GoCheckCircle } from 'react-icons/go'
 
 type MessageBoxProps = {
   message: Message
@@ -23,16 +24,13 @@ const MessageBox = ({ message, senderUser }: MessageBoxProps) => {
 
     return message.is_seen_by.includes(user.id)
   }
-  {
-    senderUser.username === 'testin-3' && console.log(message)
-  }
 
   return (
     <div
       key={`${JSON.stringify(message.created_at)}-${message.sender_id}-${message.conversation_id}-${message.content}`}
       className={cn('m-2 flex', isOwnMessage ? 'justify-end' : 'justify-start')}
     >
-      <fieldset className='border-red-500" flex max-w-[70%] flex-col gap-1 break-words rounded border-2 bg-base-light p-2 shadow-md shadow-t'>
+      <fieldset className='border-red-500" relative flex max-w-[70%] flex-col gap-1 break-words rounded border-2 bg-base-light p-2 shadow-md shadow-t'>
         <legend
           className={cn(
             'flex px-1 font-bold text-shl',
@@ -45,9 +43,14 @@ const MessageBox = ({ message, senderUser }: MessageBoxProps) => {
             className={cn('ml-2 self-center text-lg', isOnline ? 'text-success' : 'text-error')}
           />
         </legend>
-        <p className="break-words">{message.content}</p>
+        <GoCheckCircle
+          className={cn(
+            'absolute right-[5px] top-[-7px]',
+            isMessageSeen() ? 'text-shl-light' : 'text-t-sec',
+          )}
+        />
+        <p className="break-words text-white">{message.content}</p>
         <p className="text-sm text-t-sec">Sent: {formatTime('distance', message.created_at)}</p>
-        <p>Is this message seen: {isMessageSeen() ? 'yes' : 'no'}</p>
       </fieldset>
     </div>
   )
