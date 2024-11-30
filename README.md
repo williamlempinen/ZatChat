@@ -1,4 +1,8 @@
-### Hello world
+# ZatChat
+
+Simple React project where I use WebSockets to implement basic chatting features.
+
+Server uses Express NodeJs
 
 
 

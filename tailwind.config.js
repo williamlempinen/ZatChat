@@ -37,6 +37,7 @@ const config = {
         },
         error: {
           DEFAULT: '#d73241',
+          dark: '#bc2532',
         },
         success: {
           DEFAULT: '#00f000',

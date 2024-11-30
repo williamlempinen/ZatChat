@@ -24,7 +24,11 @@ const UserCard = ({ searchedUser }: UserCardProps) => {
       )}
       onClick={() => setIsOpen(!isOpen)}
     >
-      <ContactActionsModal open={isOpen} close={() => setIsOpen(!isOpen)} user={searchedUser} />
+      <ContactActionsModal
+        open={isOpen}
+        close={() => setIsOpen(!isOpen)}
+        modalUser={searchedUser}
+      />
       <div className="flex items-center gap-2">
         <div
           className={cn('h-3 w-3 rounded-full', searchedUser.is_active ? 'bg-success' : 'bg-error')}
