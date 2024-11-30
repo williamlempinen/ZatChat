@@ -113,7 +113,7 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
                   'flex items-center justify-center',
                 )}
               >
-                {window.innerWidth >= 600 ? <>Add to contacts</> : <GoPersonAdd />}
+                {window.innerWidth >= 750 ? <>Add to contacts</> : <GoPersonAdd />}
               </span>
             </button>
             <button
@@ -129,7 +129,7 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
                   'flex items-center justify-center',
                 )}
               >
-                {window.innerWidth >= 600 ? <>Start a conversation</> : <GoCrossReference />}
+                {window.innerWidth >= 750 ? <>Start a conversation</> : <GoCrossReference />}
               </span>
             </button>
             <button
@@ -145,7 +145,7 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
                   'flex items-center justify-center',
                 )}
               >
-                {window.innerWidth >= 600 ? (
+                {window.innerWidth >= 750 ? (
                   <>Add to conversation</>
                 ) : (
                   <GoCommentDiscussion className="text-lg" />

@@ -16,10 +16,15 @@ const UserCard = ({ searchedUser }: UserCardProps) => {
 
   if (searchedUser.id === user.id) return
 
+  const isInContacts = () => {
+    const contacts = user.contacts.map((c) => c.id)
+    return contacts.includes(searchedUser.id)
+  }
+
   return (
     <div
       className={cn(
-        'grid w-full grid-cols-2 grid-rows-1 p-2 sm:grid-cols-3',
+        'grid w-full grid-cols-2 grid-rows-1 p-2 sm:grid-cols-4',
         'hover:cursor-pointer hover:shadow hover:shadow-t-sec',
       )}
       onClick={() => setIsOpen(!isOpen)}
@@ -38,6 +43,9 @@ const UserCard = ({ searchedUser }: UserCardProps) => {
       <p className="hidden self-center text-xs underline sm:block">
         Joined {formatTime('distance', searchedUser.created_at)}
       </p>
+      <span className={cn(isInContacts() ? 'text-success' : 'text-error', 'hidden sm:block')}>
+        {isInContacts() ? 'In contacts' : 'No a contact'}
+      </span>
       {searchedUser.profile_picture_url ? (
         <span>pic</span>
       ) : (
