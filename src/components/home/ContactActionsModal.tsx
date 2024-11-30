@@ -8,6 +8,7 @@ import { useAuth } from '../../lib/AuthContext'
 import PrimaryButton from '../ui/PrimaryButton'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
 import { useNavigate } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query'
 
 type ContactActionsModalProps = {
   modalUser: User
@@ -31,7 +32,8 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
 
   const modalRef = React.useRef<HTMLDialogElement>(null)
 
-  const { getPrivateConversationId, createConversation, getConversation } = nodeServerApi()
+  const { getPrivateConversationId, createConversation, getConversation, postAddUserToContacts } =
+    nodeServerApi()
 
   const handleClickOutside = (event: React.MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -39,15 +41,27 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
     }
   }
 
+  const {
+    mutate: addUserContactResponse,
+    isPending: isLoadingAddContacts,
+    isError,
+  } = useMutation({
+    mutationKey: ['add-user-to-contacts'],
+    mutationFn: () => postAddUserToContacts(JSON.stringify(user.id), JSON.stringify(modalUser.id)),
+    onSuccess: () => {
+      close()
+    },
+  })
+
   const isAlreadyContact = () => {
     const ids = user?.contacts.map((c) => c.id)
     return ids.includes(modalUser.id)
   }
 
-  const handleAddUserToContacts = () => {
+  const handleAddUserToContacts = async () => {
     console.log('ADD USER')
     console.log(user)
-    close()
+    addUserContactResponse()
   }
 
   const handleRemoveUserFromContacts = () => {

@@ -17,7 +17,8 @@ const UserCard = ({ searchedUser }: UserCardProps) => {
   if (searchedUser.id === user.id) return
 
   const isInContacts = () => {
-    const contacts = user.contacts.map((c) => c.id)
+    const contacts = user.contacts.map((c) => c.contact_id)
+
     return contacts.includes(searchedUser.id)
   }
 

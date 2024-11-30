@@ -1,5 +1,6 @@
 import apiClient from './apiClient'
 
+// these should be renamed to follow the used method
 export const nodeServerApi = () => {
   const postLogin = async (email: string, password: string): Promise<void> => {
     const response = await apiClient.post('/access/login', { email, password })
@@ -67,6 +68,11 @@ export const nodeServerApi = () => {
     return response.data
   }
 
+  const postAddUserToContacts = async (userId: string, contactId: string) => {
+    const response = await apiClient.post('/contact/create-contact', { userId, contactId })
+    return response.data
+  }
+
   return {
     postLogin,
     postSignup,
@@ -79,5 +85,6 @@ export const nodeServerApi = () => {
     getPrivateConversationId,
     createConversation,
     getConversation,
+    postAddUserToContacts,
   }
 }
