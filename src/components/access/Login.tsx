@@ -99,7 +99,6 @@ const Login = () => {
       />
       {isPending && <span>Loading...</span>}
       {isError && <span>Wrong credentials, try again</span>}
-      <button onClick={test}>Test auth</button>
     </form>
   )
 }

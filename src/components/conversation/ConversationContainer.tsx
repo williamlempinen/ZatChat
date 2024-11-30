@@ -8,6 +8,7 @@ import { useChat } from '../../lib/webSocket/ChatContext'
 import ErrorTypography from '../ui/ErrorTypography'
 import { formatTime } from '../../lib/utils'
 import Loading from '../ui/Loading'
+import { useAuth } from '../../lib/AuthContext'
 
 const ConversationContainer = () => {
   const [messagesPageNumber, setMessagesPageNumber] = React.useState<number>(2)
@@ -27,9 +28,13 @@ const ConversationContainer = () => {
 
   const { isConnectionError, isSendingMessageError, isConnected, messages } = useChat()
 
+  const { user } = useAuth()
+
   const extractConversationName = (): string => {
-    if (!conversationData?.group_name?.includes('<>')) return conversationData.group_name
-    return conversationData?.group_name?.split('<>')[1].trim()
+    if (!conversationData.group_name.includes('<>')) return conversationData.group_name
+
+    const participants = conversationData.group_name.split('<>').map((name) => name.trim())
+    return participants.find((name) => name !== user.username) || 'Unknown'
   }
 
   const getOlderMessages = async () => {
@@ -116,6 +121,8 @@ const ConversationContainer = () => {
   }
 
   // TODO: ERROR HANDLING
+  // no error handling if error occurs on sending message
+  // conversation is still updated optimistically
   return (
     <div className="flex h-[20rem] w-full flex-grow flex-col p-4">
       <div className="h-12 border-b-4 border-white">

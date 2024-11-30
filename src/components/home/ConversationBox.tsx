@@ -10,13 +10,15 @@ type ConversationBoxProps = {
 }
 
 const ConversationBox = ({ conversation }: ConversationBoxProps) => {
-  const { logout } = useAuth()
+  const { logout, user } = useAuth()
 
   const navigate = useNavigate()
 
   const extractConversationName = (): string => {
     if (!conversation.group_name.includes('<>')) return conversation.group_name
-    return conversation.group_name.split('<>')[1].trim()
+
+    const participants = conversation.group_name.split('<>').map((name) => name.trim())
+    return participants.find((name) => name !== user.username) || 'Unknown'
   }
 
   const openConversation = () => {
