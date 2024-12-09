@@ -78,6 +78,19 @@ export const nodeServerApi = () => {
     return response.data
   }
 
+  const getGroupConversations = async (userId: string) => {
+    const response = await apiClient.get(`/conversation/get-groups/${userId}`)
+    return response.data
+  }
+
+  const postAddUserToGroup = async (userId: string, conversationId: string) => {
+    const response = await apiClient.post(`/conversation/add-user-to-group`, {
+      userId,
+      conversationId,
+    })
+    return response.data
+  }
+
   return {
     postLogin,
     postSignup,
@@ -92,5 +105,7 @@ export const nodeServerApi = () => {
     getConversation,
     postAddUserToContacts,
     postDeleteUserFromContacts,
+    getGroupConversations,
+    postAddUserToGroup,
   }
 }

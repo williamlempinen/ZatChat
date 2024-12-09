@@ -32,6 +32,10 @@ const ConversationBox = ({ conversation }: ConversationBoxProps) => {
     navigate(`/conversation/?conversation-id=${conversation.id}`, { state: { conversation } })
   }
 
+  const filteredParticipants = conversation.participants.filter(
+    (participant) => participant.username !== user.username,
+  )
+
   // create css transformation
   return (
     <div
@@ -51,13 +55,12 @@ const ConversationBox = ({ conversation }: ConversationBoxProps) => {
       </p>
       {conversation.is_group && (
         <div className="flex gap-1">
-          {conversation.participants[1] && (
-            <p className="text-t-sec">{conversation.participants[1].username}</p>
-          )}
-          {conversation.participants[2] && (
-            <p className="text-t-sec">, {conversation.participants[2].username}</p>
-          )}
-          {conversation.participants.length > 3 && <span className="text-t-sec">...</span>}
+          {filteredParticipants.slice(0, 2).map((participant, index) => (
+            <p key={participant.id} className="text-t-sec">
+              {index > 0 ? `, ${participant.username}` : participant.username}
+            </p>
+          ))}
+          {filteredParticipants.length > 2 && <span className="text-t-sec">...</span>}
         </div>
       )}
     </div>

@@ -1,4 +1,3 @@
-import { formatDate } from 'date-fns'
 import { useAuth } from '../../lib/AuthContext'
 import { formatTime } from '../../lib/utils'
 import { AiFillGithub } from 'react-icons/ai'
@@ -9,7 +8,7 @@ const Footer = () => {
   const now = new Date()
 
   const handleSourceClick = () => {
-    window.open('https://github.com/williamlempinen', '_blank')
+    window.open('https://github.com/williamlempinen/ZatChat', '_blank')
   }
 
   return (

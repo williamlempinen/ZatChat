@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useAuth } from '../../lib/AuthContext'
 import { cn, formatTime } from '../../lib/utils'
-import { Contact, User } from '../../types/types'
+import { User } from '../../types/types'
 import { GoSmiley } from 'react-icons/go'
 import ContactActionsModal from './ContactActionsModal'
 
@@ -15,7 +15,7 @@ const UserCard = ({ searchedUser }: UserCardProps) => {
   const { user } = useAuth()
 
   const [contactIds, setContactIds] = React.useState<number[]>(
-    user.contacts.map((c) => c.contact_id),
+    user.contacts?.map((c) => c.contact_id) || [],
   )
 
   if (searchedUser.id === user.id) return
@@ -62,7 +62,7 @@ const UserCard = ({ searchedUser }: UserCardProps) => {
         {isInContacts() ? 'In contacts' : 'Not a contact'}
       </span>
       {searchedUser.profile_picture_url ? (
-        <span>pic</span>
+        <span>pic</span> /* here the support for user's profile pic */
       ) : (
         <GoSmiley className="self-center justify-self-end text-lg text-shl" />
       )}

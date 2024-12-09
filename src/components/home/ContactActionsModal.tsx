@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Contact, User } from '../../types/types'
+import { Conversation, User } from '../../types/types'
 import { cn } from '../../lib/utils'
 import { GoPersonAdd } from 'react-icons/go'
 import { GoCrossReference } from 'react-icons/go'
@@ -8,7 +8,9 @@ import { useAuth } from '../../lib/AuthContext'
 import PrimaryButton from '../ui/PrimaryButton'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
 import { useNavigate } from 'react-router-dom'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import Loading from '../ui/Loading'
+import ErrorTypography from '../ui/ErrorTypography'
 
 type ContactActionsModalProps = {
   modalUser: User
@@ -44,8 +46,10 @@ const ContactActionsModal = ({
     getPrivateConversationId,
     createConversation,
     getConversation,
+    getGroupConversations,
     postAddUserToContacts,
     postDeleteUserFromContacts,
+    postAddUserToGroup,
   } = nodeServerApi()
 
   const handleClickOutside = (event: React.MouseEvent) => {
@@ -57,7 +61,7 @@ const ContactActionsModal = ({
   const {
     mutate: addUserContactResponse,
     isPending: isLoadingAddContact,
-    isError: isAddContactError,
+    isError: isErrorAddingContact,
   } = useMutation({
     mutationKey: [`add-user-to-contacts-${user.username}-${modalUser.username}`],
     mutationFn: () => postAddUserToContacts(JSON.stringify(user.id), JSON.stringify(modalUser.id)),
@@ -70,7 +74,7 @@ const ContactActionsModal = ({
   const {
     mutate: deleteUserFromContacts,
     isPending: isLoadingDeleteContact,
-    isError: isDeleteContactError,
+    isError: isErrorDeleteContact,
   } = useMutation({
     mutationKey: [`delete-user-from-contacts-${user.username}-${modalUser.username}`],
     mutationFn: () =>
@@ -81,19 +85,39 @@ const ContactActionsModal = ({
     },
   })
 
+  const {
+    mutate: addToGroup,
+    isPending: isLoadingAddingToGroup,
+    isError: isErrorAddingToGroup,
+  } = useMutation({
+    mutationKey: [`add-to-group-${modalUser.username}`],
+    mutationFn: (conversationId: string) =>
+      postAddUserToGroup(JSON.stringify(modalUser.id), conversationId),
+    onSuccess: () => {
+      closeModal()
+    },
+  })
+
+  const {
+    data: groupConversations,
+    isLoading: isLoadingGroupConversations,
+    isError: isErrorGroupConversations,
+    refetch,
+  } = useQuery({
+    queryKey: [`get-group-conversations-user-${user.id}-${user.username}`],
+    queryFn: () => getGroupConversations(JSON.stringify(user.id)),
+  })
+
   const isAlreadyContact = () => {
     return contactIds.includes(modalUser.id)
   }
 
   const handleContactActions = async () => {
     if (isAlreadyContact()) {
-      console.log('######## DELETE CONTACT ########')
       deleteUserFromContacts()
       return
     }
 
-    console.log('######## ADD CONTACT ##########')
-    console.log(user)
     addUserContactResponse()
   }
 
@@ -129,8 +153,9 @@ const ContactActionsModal = ({
     })
   }
 
-  console.log('USER: ', user)
-  console.log('MODAL USER: ', modalUser)
+  const handleAddUserToGroup = async (conversationId: number) => {
+    addToGroup(JSON.stringify(conversationId))
+  }
 
   return (
     open && (
@@ -209,7 +234,7 @@ const ContactActionsModal = ({
                       variant="error"
                       displayText="Remove"
                       isLoading={isLoadingDeleteContact}
-                      isError={isDeleteContactError}
+                      isError={isErrorDeleteContact}
                       onClick={handleContactActions}
                     />
                   </div>
@@ -220,7 +245,7 @@ const ContactActionsModal = ({
                       variant="yellow"
                       displayText="Add"
                       isLoading={isLoadingAddContact}
-                      isError={isAddContactError}
+                      isError={isErrorAddingContact}
                       onClick={handleContactActions}
                     />
                   </>
@@ -237,7 +262,31 @@ const ContactActionsModal = ({
                 />
               </>
             ) : (
-              <p>add to {modalUser.username} to a group</p>
+              <>
+                <p>Add to {modalUser.username} to a group</p>
+                <div className="no-scrollbar flex h-full max-h-[12rem] w-full flex-col self-center overflow-y-auto">
+                  {isLoadingGroupConversations && <Loading />}
+                  {isErrorGroupConversations && !isLoadingGroupConversations && (
+                    <PrimaryButton variant="error" displayText="Error" onClick={() => refetch()} />
+                  )}
+                  {!isErrorGroupConversations &&
+                    !isLoadingGroupConversations &&
+                    groupConversations.data.map((g: Conversation) => (
+                      <div
+                        key={`${g.id}-${g.group_name}`}
+                        className="m-1 flex flex-col rounded bg-base-light p-1 hover:shadow hover:shadow-t"
+                        onClick={() => handleAddUserToGroup(g.id)}
+                      >
+                        <p key={`${g.id}-${g.group_name}`}>{g.group_name}</p>
+                        <p className="text-xs text-t-sec" key={`${g.id}-${g.group_name}`}>
+                          {g.participants.length} members
+                        </p>
+                      </div>
+                    ))}
+                  {isErrorAddingToGroup && !isLoadingAddingToGroup && <ErrorTypography />}
+                  {isLoadingAddingToGroup && <Loading />}
+                </div>
+              </>
             )}
           </div>
         </dialog>
