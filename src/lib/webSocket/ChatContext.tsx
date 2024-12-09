@@ -89,6 +89,9 @@ export const ChatProvider = ({ children }: React.PropsWithChildren) => {
 
     if (wsRef.current.readyState !== WebSocket.OPEN) return
 
+    // todo is user online, is user seen messages should
+    // be sent in here -> does not require changes in here
+    // but in server side in the ws manager/service
     wsRef.current.send(JSON.stringify(newMessage))
   }
 

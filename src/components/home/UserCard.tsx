@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useAuth } from '../../lib/AuthContext'
 import { cn, formatTime } from '../../lib/utils'
-import { User } from '../../types/types'
+import { Contact, User } from '../../types/types'
 import { GoSmiley } from 'react-icons/go'
 import ContactActionsModal from './ContactActionsModal'
 
@@ -14,12 +14,23 @@ const UserCard = ({ searchedUser }: UserCardProps) => {
 
   const { user } = useAuth()
 
+  const [contactIds, setContactIds] = React.useState<number[]>(
+    user.contacts.map((c) => c.contact_id),
+  )
+
   if (searchedUser.id === user.id) return
 
   const isInContacts = () => {
-    const contacts = user.contacts.map((c) => c.contact_id)
+    return contactIds.includes(searchedUser.id)
+  }
 
-    return contacts.includes(searchedUser.id)
+  const handleChangeInContacts = (contactId: number, isAdd: boolean) => {
+    if (isAdd) {
+      setContactIds((prev) => [...prev, contactId])
+      return
+    }
+
+    setContactIds((prev) => prev.filter((id) => id !== contactId))
   }
 
   return (
@@ -32,8 +43,10 @@ const UserCard = ({ searchedUser }: UserCardProps) => {
     >
       <ContactActionsModal
         open={isOpen}
-        close={() => setIsOpen(!isOpen)}
+        closeModal={() => setIsOpen(!isOpen)}
         modalUser={searchedUser}
+        onUpdateContacts={handleChangeInContacts}
+        contactIds={contactIds}
       />
       <div className="flex items-center gap-2">
         <div

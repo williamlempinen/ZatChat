@@ -43,5 +43,3 @@ export type Message = {
   is_seen_by: number[]
   conversation_id: number
 }
-
-export type TimeVariantType = 'full' | 'dates' | 'times' | 'distance'

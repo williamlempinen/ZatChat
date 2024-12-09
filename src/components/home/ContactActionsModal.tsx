@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { User } from '../../types/types'
+import { Contact, User } from '../../types/types'
 import { cn } from '../../lib/utils'
 import { GoPersonAdd } from 'react-icons/go'
 import { GoCrossReference } from 'react-icons/go'
@@ -13,7 +13,9 @@ import { useMutation } from '@tanstack/react-query'
 type ContactActionsModalProps = {
   modalUser: User
   open: boolean
-  close: () => void
+  closeModal: () => void
+  onUpdateContacts: (contactId: number, isAdd: boolean) => void
+  contactIds: number[]
 }
 
 enum ActionType {
@@ -22,7 +24,13 @@ enum ActionType {
   ADD_TO_CONVERSATION,
 }
 
-const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProps) => {
+const ContactActionsModal = ({
+  modalUser,
+  open,
+  closeModal,
+  onUpdateContacts,
+  contactIds,
+}: ContactActionsModalProps) => {
   const [actionView, setActionView] = React.useState<ActionType>(ActionType.CONTACTS)
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
@@ -42,7 +50,7 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
 
   const handleClickOutside = (event: React.MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-      close()
+      closeModal()
     }
   }
 
@@ -54,12 +62,13 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
     mutationKey: [`add-user-to-contacts-${user.username}-${modalUser.username}`],
     mutationFn: () => postAddUserToContacts(JSON.stringify(user.id), JSON.stringify(modalUser.id)),
     onSuccess: () => {
-      close()
+      onUpdateContacts(modalUser.id, true)
+      closeModal()
     },
   })
 
   const {
-    mutate: deleteUserFromResponse,
+    mutate: deleteUserFromContacts,
     isPending: isLoadingDeleteContact,
     isError: isDeleteContactError,
   } = useMutation({
@@ -67,23 +76,23 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
     mutationFn: () =>
       postDeleteUserFromContacts(JSON.stringify(user.id), JSON.stringify(modalUser.id)),
     onSuccess: () => {
-      close()
+      onUpdateContacts(modalUser.id, false)
+      closeModal()
     },
   })
 
   const isAlreadyContact = () => {
-    const ids = user?.contacts.map((c) => c.id)
-    return ids.includes(modalUser.id)
+    return contactIds.includes(modalUser.id)
   }
 
   const handleContactActions = async () => {
     if (isAlreadyContact()) {
-      console.log('DELETE CONTACT')
-      deleteUserFromResponse()
+      console.log('######## DELETE CONTACT ########')
+      deleteUserFromContacts()
       return
     }
 
-    console.log('ADD CONTACT')
+    console.log('######## ADD CONTACT ##########')
     console.log(user)
     addUserContactResponse()
   }
@@ -119,6 +128,9 @@ const ContactActionsModal = ({ modalUser, open, close }: ContactActionsModalProp
       state: { conversation: conversationData.data },
     })
   }
+
+  console.log('USER: ', user)
+  console.log('MODAL USER: ', modalUser)
 
   return (
     open && (

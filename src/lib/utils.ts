@@ -1,8 +1,9 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { ZodSchema } from 'zod'
-import { TimeVariantType } from '../types/types'
 import { format, formatDistanceToNow } from 'date-fns'
+
+type TimeVariantType = 'full' | 'dates' | 'times' | 'distance'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
