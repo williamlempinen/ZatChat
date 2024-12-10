@@ -9,6 +9,7 @@ import ErrorTypography from '../ui/ErrorTypography'
 import { formatTime } from '../../lib/utils'
 import Loading from '../ui/Loading'
 import { useAuth } from '../../lib/AuthContext'
+import { GoPeople } from 'react-icons/go'
 
 const ConversationContainer = () => {
   const [messagesPageNumber, setMessagesPageNumber] = React.useState<number>(2)
@@ -120,13 +121,21 @@ const ConversationContainer = () => {
     return user
   }
 
+  const participantsAsString = (): string => {
+    return conversationData.participants
+      .filter((p) => p.username !== user.username)
+      .map((p) => p.username)
+      .toString()
+  }
+
   // TODO: ERROR HANDLING
   // no error handling if error occurs on sending message
   // conversation is still updated optimistically
   return (
     <div className="flex h-[20rem] w-full flex-grow flex-col p-4">
-      <div className="h-12 border-b-4 border-white">
+      <div className="flex h-12 justify-between border-b-4">
         <p className="text-xl font-bold text-shl">{extractConversationName()}</p>
+        <GoPeople className="mr-4 text-4xl text-secondary" title={participantsAsString()} />
       </div>
       <div
         className="no-scrollbar flex h-full flex-col overflow-y-auto scroll-smooth"

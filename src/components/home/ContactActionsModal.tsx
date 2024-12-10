@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Conversation, User } from '../../types/types'
+import { Conversation, Participant, User } from '../../types/types'
 import { cn } from '../../lib/utils'
 import { GoPersonAdd } from 'react-icons/go'
 import { GoCrossReference } from 'react-icons/go'
@@ -25,6 +25,8 @@ enum ActionType {
   CONVERSATION,
   ADD_TO_CONVERSATION,
 }
+
+// this file should be heavily refactored
 
 const ContactActionsModal = ({
   modalUser,
@@ -157,6 +159,13 @@ const ContactActionsModal = ({
     addToGroup(JSON.stringify(conversationId))
   }
 
+  const addableGroups = () => {
+    return groupConversations?.data.filter(
+      (g: Conversation) =>
+        !g.participants.some((p: Participant) => p.username === modalUser.username),
+    )
+  }
+
   return (
     open && (
       <div
@@ -216,7 +225,7 @@ const ContactActionsModal = ({
                 )}
               >
                 {window.innerWidth >= 750 ? (
-                  <>Add to conversation</>
+                  <>Add to group</>
                 ) : (
                   <GoCommentDiscussion className="text-lg" />
                 )}
@@ -271,7 +280,7 @@ const ContactActionsModal = ({
                   )}
                   {!isErrorGroupConversations &&
                     !isLoadingGroupConversations &&
-                    groupConversations.data.map((g: Conversation) => (
+                    addableGroups().map((g: Conversation) => (
                       <div
                         key={`${g.id}-${g.group_name}`}
                         className="m-1 flex flex-col rounded bg-base-light p-1 hover:shadow hover:shadow-t"
