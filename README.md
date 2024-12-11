@@ -18,7 +18,5 @@ Server uses Express NodeJs
 - real-time handling of unread messages with websocket
 - fix auth/apiClient
 - change theme
-- add user to a group
-- contacts handling
-- creating a group
+- user's contacts are undefined on right after login
 - hosting

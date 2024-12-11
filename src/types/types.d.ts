@@ -2,6 +2,7 @@ export type Contact = {
   id: number
   user_id: number // refers to the user itself
   contact_id: number // refers to the contact (not current user)
+  username: string
   created_at: Date
 }
 

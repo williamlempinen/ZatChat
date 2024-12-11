@@ -23,6 +23,7 @@ interface AuthContextProps {
   logout: () => void
   refreshTokens: () => Promise<void>
   isAuthenticated: boolean
+  isGlobalLoading: boolean
 }
 
 const AuthContext = React.createContext<AuthContextProps>({} as AuthContextProps)
@@ -37,6 +38,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   )
   const [sessionId, setSessionId] = React.useState<string | undefined>(Cookies.get('sessionId'))
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false)
+  const [isGlobalLoading, setIsGlobalLoading] = React.useState<boolean>(true)
 
   const queryClient = useQueryClient()
 
@@ -49,7 +51,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
       const res = await apiClient.post('/access/validate-session', { sessionId })
 
       const data = res.data.data
-      console.log('DATA: \n ', res)
+      console.log('DATA VALIDATE: \n ', res)
       if (!data) return false
 
       console.log('DATA2: ', data)
@@ -86,6 +88,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
         handleLogout()
       }
 
+      setIsGlobalLoading(false)
       console.log(
         'Logging session: \n is auth',
         isAuthenticated,
@@ -112,7 +115,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
 
     if (!data) return false
 
-    console.log('DATA: ', data)
+    console.log('DATA LOGIN: ', data)
 
     apiClient.defaults.headers.Authorization = `Bearer ${data.accessToken}`
 
@@ -199,6 +202,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
         signup,
         logout,
         isAuthenticated,
+        isGlobalLoading,
       }}
     >
       {children}

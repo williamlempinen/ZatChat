@@ -18,7 +18,7 @@ const PrivateRoute = ({ children }: PropsWithChildren) => {
 }
 
 const App = () => {
-  const { logout } = useAuth()
+  const { logout, isGlobalLoading } = useAuth()
 
   React.useEffect(() => {
     setupApiClient(logout)
@@ -26,6 +26,7 @@ const App = () => {
 
   return (
     <Router>
+      {isGlobalLoading && <p>Hello world</p>}
       <Layout>
         <Routes>
           <Route
