@@ -36,7 +36,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   const [refreshToken, setRefreshToken] = React.useState<string | undefined>(
     Cookies.get('refreshToken'),
   )
-  const [sessionId, setSessionId] = React.useState<string | undefined>(Cookies.get('sessionId'))
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false)
   const [isGlobalLoading, setIsGlobalLoading] = React.useState<boolean>(true)
 
@@ -46,9 +45,9 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
 
   const validateSession = async (): Promise<boolean> => {
     try {
-      if (!sessionId) return false
+      if (!accessToken || !refreshToken) return false
 
-      const res = await apiClient.post('/access/validate-session', { sessionId })
+      const res = await apiClient.post('/access/validate-session', { accessToken, refreshToken })
 
       const data = res.data.data
       console.log('DATA VALIDATE: \n ', res)
@@ -92,8 +91,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
       console.log(
         'Logging session: \n is auth',
         isAuthenticated,
-        '\n session: ',
-        sessionId,
         '\n access: ',
         accessToken,
         '\n refresh: ',
@@ -125,9 +122,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
     setRefreshToken(data.refreshToken)
     Cookies.set('refreshToken', data.refreshToken)
 
-    setSessionId(data.sessionId)
-    Cookies.set('sessionId', data.sessionId)
-
     setUser({
       contacts: data.contacts,
       created_at: data.user.created_at,
@@ -156,21 +150,19 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   const handleLogout = () => {
     setAccessToken(undefined)
     setRefreshToken(undefined)
-    setSessionId(undefined)
     setUser({} as User)
 
     queryClient.clear()
 
     Cookies.remove('accessToken')
     Cookies.remove('refreshToken')
-    Cookies.remove('sessionId')
 
     delete apiClient.defaults.headers.Authorization
   }
 
   const logout = async () => {
     try {
-      await apiClient.post('/access/logout', { sessionId })
+      await apiClient.post('/access/logout', { accessToken, refreshToken })
     } catch (error: any) {
       console.error('Logout failed')
     } finally {
