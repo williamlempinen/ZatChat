@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import * as dotenv from 'dotenv'
 
 export default defineConfig(({ mode }) => {
-  const envFilePath = `.env.${mode}`
+  const envFilePath = `.env`
   dotenv.config({ path: envFilePath })
 
   const isDev = mode === 'development'
