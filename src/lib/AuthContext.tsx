@@ -23,7 +23,6 @@ interface AuthContextProps {
   logout: () => void
   refreshTokens: () => Promise<void>
   isAuthenticated: boolean
-  isGlobalLoading: boolean
 }
 
 const AuthContext = React.createContext<AuthContextProps>({} as AuthContextProps)
@@ -37,7 +36,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
     Cookies.get('refreshToken'),
   )
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false)
-  const [isGlobalLoading, setIsGlobalLoading] = React.useState<boolean>(true)
 
   const queryClient = useQueryClient()
 
@@ -50,13 +48,10 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
       const res = await apiClient.post('/access/validate-session', { accessToken, refreshToken })
 
       const data = res.data.data
-      console.log('DATA VALIDATE: \n ', res)
       if (!data) return false
 
-      console.log('DATA2: ', data)
-
       setUser({
-        contacts: data.contacts,
+        contacts: [...data.contacts],
         created_at: data.created_at,
         email: data.email,
         id: data.id,
@@ -65,8 +60,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
         role: data.role,
         username: data.username,
       })
-
-      console.log('USER: ', data)
 
       return res.data.status === 200
     } catch (error: any) {
@@ -86,20 +79,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
       } else {
         handleLogout()
       }
-
-      setIsGlobalLoading(false)
-      console.log(
-        'Logging session: \n is auth',
-        isAuthenticated,
-        '\n access: ',
-        accessToken,
-        '\n refresh: ',
-        refreshToken,
-        '\n ISVALID: ',
-        isValid,
-        '\n user: ',
-        user,
-      )
     }
 
     checkSession()
@@ -112,8 +91,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
 
     if (!data) return false
 
-    console.log('DATA LOGIN: ', data)
-
     apiClient.defaults.headers.Authorization = `Bearer ${data.accessToken}`
 
     setAccessToken(data.accessToken)
@@ -123,7 +100,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
     Cookies.set('refreshToken', data.refreshToken)
 
     setUser({
-      contacts: data.contacts,
+      contacts: data.user.contacts,
       created_at: data.user.created_at,
       email: data.user.email,
       id: data.user.id,
@@ -138,7 +115,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
   }
 
   const signup = async ({ username, email, password }: SignupParams): Promise<boolean> => {
-    console.log('signup action')
     const res = await apiClient.post('/access/signup', { username, email, password })
 
     const data = res.data.data
@@ -194,7 +170,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
         signup,
         logout,
         isAuthenticated,
-        isGlobalLoading,
       }}
     >
       {children}

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Conversation } from '../../types/types'
 import ConversationBox from './ConversationBox'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '../../lib/AuthContext'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
 import PrimaryButton from '../ui/PrimaryButton'
@@ -22,7 +22,6 @@ const PreviousConversations = () => {
 
   const { getConversations } = nodeServerApi()
 
-  // because of the conversation schema
   const updateUnreadCounts = (conversations: Conversation[], userId: number) => {
     return conversations.map((conversation) => {
       const unreadCount = conversation.messages.filter(
@@ -62,11 +61,13 @@ const PreviousConversations = () => {
     data: emptyArray,
     isLoading,
     isError,
+    isFetching,
     refetch,
     isSuccess,
   } = useQuery({
     queryKey: ['get-previous-conversations', `user id ${user.id}`],
     queryFn: () => handlePreviousConversations(),
+    refetchOnWindowFocus: false,
   })
 
   // there is issues in loading
@@ -96,7 +97,11 @@ const PreviousConversations = () => {
           <ConversationBox key={conversation.id} conversation={conversation} />
         ))
       ) : (
-        <div>{!isLoading && <p>You don't yet have any ongoing conversations</p>}</div>
+        <div>
+          {!isLoading && conversations.length === 0 && !isFetching && (
+            <p>You don't yet have any ongoing conversations</p>
+          )}
+        </div>
       )}
       {hasNextPage && (
         <PrimaryButton
@@ -104,7 +109,7 @@ const PreviousConversations = () => {
           onClick={() => handlePreviousConversations()}
         />
       )}
-      {isLoading && <Loading />}
+      {(isLoading || isFetching) && <Loading />}
     </Root>
   )
 }
