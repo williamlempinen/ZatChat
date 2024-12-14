@@ -279,7 +279,12 @@ const ContactActionsModal = ({
                     <PrimaryButton variant="error" displayText="Error" onClick={() => refetch()} />
                   )}
                   {!isErrorGroupConversations &&
-                    !isLoadingGroupConversations &&
+                  !isLoadingGroupConversations &&
+                  addableGroups().length === 0 ? (
+                    <p className="my-2 self-center text-xs text-t-sec">
+                      You don't have any created groups
+                    </p>
+                  ) : (
                     addableGroups().map((g: Conversation) => (
                       <div
                         key={`${g.id}-${g.group_name}`}
@@ -291,7 +296,8 @@ const ContactActionsModal = ({
                           {g.participants.length} members
                         </p>
                       </div>
-                    ))}
+                    ))
+                  )}
                   {isErrorAddingToGroup && !isLoadingAddingToGroup && <ErrorTypography />}
                   {isLoadingAddingToGroup && <Loading />}
                 </div>

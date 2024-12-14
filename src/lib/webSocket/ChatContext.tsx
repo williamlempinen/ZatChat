@@ -59,6 +59,7 @@ export const ChatProvider = ({ children }: React.PropsWithChildren) => {
     wsConnection.onmessage = (event) => {
       try {
         const received = JSON.parse(event.data)
+        console.log('WS RECEIVED: ', received)
 
         if (received.type === 'success' && received.data) {
           setMessages((prev) => [...prev, received.data])

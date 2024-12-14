@@ -23,8 +23,6 @@ const Login = () => {
 
   const { login } = useAuth()
 
-  const { testGetProtectedData } = nodeServerApi()
-
   const {
     mutate: postLogin,
     isPending,
@@ -85,7 +83,7 @@ const Login = () => {
         displayText="Login"
         disabled={credentials.email === '' || credentials.password === ''}
       />
-      {isPending && <span>Loading...</span>}
+      {isPending && <span>Checking credentials...</span>}
       {isError && <span>Wrong credentials, try again</span>}
     </form>
   )

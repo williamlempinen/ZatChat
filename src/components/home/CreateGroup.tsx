@@ -80,7 +80,9 @@ const CreateGroup = () => {
         <IconButton icon={<GoPersonAdd />} onClick={handleStartAddingContacts} />
       </div>
       <div className="mt-4 flex flex-col">
-        {isValidToContinue &&
+        {isValidToContinue && (user?.contacts?.length === 0 || user?.contacts === undefined) ? (
+          <p className="self-center text-xs text-t-sec">Could not find any contacts</p>
+        ) : (
           user?.contacts?.map((p) => (
             <div
               className="flex p-2 hover:shadow hover:shadow-t"
@@ -88,7 +90,8 @@ const CreateGroup = () => {
             >
               <p key={p.id}>{p.username}</p>)
             </div>
-          ))}
+          ))
+        )}
         {newGroupState.participants.length > 0 && (
           <PrimaryButton
             displayText="Create group"

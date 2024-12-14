@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Conversation, Message } from '../../types/types'
+import { Conversation, Message, Participant } from '../../types/types'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
 import MessageBox from './MessageBox'
@@ -68,10 +68,24 @@ const ConversationContainer = () => {
     }, 0)
   }
 
+  const activeParticipants = React.useMemo(() => {
+    return conversationData.participants.filter((p) => p.is_active).map((p) => p.id)
+  }, [conversationData.messages])
+
   const updateConversationOptimistically = (newMessage: Message) => {
+    const updatedMessages = [newMessage, ...conversationData.messages].map((message) => {
+      const updatedSeenBy = [...new Set([...message.is_seen_by, ...activeParticipants])]
+
+      return {
+        ...message,
+        is_seen_by: updatedSeenBy,
+        is_seen: updatedSeenBy.length > 0,
+      }
+    })
+
     setConversationData((prev) => ({
       ...prev,
-      messages: [newMessage, ...prev.messages],
+      messages: updatedMessages,
     }))
 
     setTimeout(() => {
@@ -116,9 +130,10 @@ const ConversationContainer = () => {
     }
   }
 
-  const passUser = (id: number) => {
+  const passUser = (id: number): { user: Participant; isActive: boolean } => {
     const [user] = conversationData.participants.filter((p) => p.id === id)
-    return user
+    const isActive = activeParticipants.includes(user.id)
+    return { user, isActive }
   }
 
   const participantsAsString = (): string => {

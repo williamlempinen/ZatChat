@@ -6,15 +6,13 @@ import { GoCheckCircle } from 'react-icons/go'
 
 type MessageBoxProps = {
   message: Message
-  senderUser: Participant
+  senderUser: { user: Participant; isActive: boolean }
 }
 
 const MessageBox = ({ message, senderUser }: MessageBoxProps) => {
   const { user } = useAuth()
 
-  const isOwnMessage = senderUser.id === user.id && senderUser.username === user.username
-
-  const isOnline = senderUser.is_active
+  const isOwnMessage = senderUser.user.id === user.id && senderUser.user.username === user.username
 
   const isMessageSeen = () => {
     if (isOwnMessage) {
@@ -37,10 +35,13 @@ const MessageBox = ({ message, senderUser }: MessageBoxProps) => {
             isOwnMessage ? 'text-shl' : 'text-secondary',
           )}
         >
-          {senderUser.username}
+          {senderUser.user.username}
           <GoPersonFill
-            title={cn(isOnline ? 'Online' : 'Offline')}
-            className={cn('ml-2 self-center text-lg', isOnline ? 'text-success' : 'text-error')}
+            title={cn(senderUser.isActive ? 'Online' : 'Offline')}
+            className={cn(
+              'ml-2 self-center text-lg',
+              senderUser.isActive ? 'text-success' : 'text-error',
+            )}
           />
         </legend>
         <GoCheckCircle
