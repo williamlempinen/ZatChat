@@ -1,35 +1,14 @@
-import * as React from 'react'
-import { nodeServerApi } from '../lib/api/nodeServerApi'
 import { useAuth } from '../lib/AuthContext'
 import SearchUsers from '../components/home/SearchUsers'
 import PreviousConversations from '../components/home/PreviousConversations'
 import { useToggle } from '../hooks/useToggle'
 import { cn } from '../lib/utils'
 import CreateGroup from '../components/home/CreateGroup'
-import PrimaryButton from '../components/ui/PrimaryButton'
 
 const Home = () => {
   const { state: isConversations, toggle } = useToggle(true, false)
 
-  const { testGetProtectedData } = nodeServerApi()
-
-  const { user, refreshToken, refreshTokens } = useAuth()
-
-  const test = async () => {
-    console.log('testing')
-    const res = await testGetProtectedData()
-    console.log('res: ', res)
-  }
-
-  const testRefresh = async () => {
-    console.log('test refreshing')
-    if (!refreshToken) {
-      console.log('NO VALID REFRESHTOKEN. CAN NOT REFRESHTOKENS')
-      return
-    }
-
-    const _res = await refreshTokens()
-  }
+  const { user } = useAuth()
 
   return (
     <div className="flex flex-col">
@@ -70,13 +49,6 @@ const Home = () => {
           <SearchUsers />
         </>
       )}
-
-      <button className="bg-base" onClick={test}>
-        Test auth
-      </button>
-      <button className="bg-base" onClick={testRefresh}>
-        REFRESH
-      </button>
     </div>
   )
 }

@@ -28,6 +28,7 @@ const Signup = () => {
     mutate: postSignup,
     isPending,
     isError,
+    isSuccess,
   } = useMutation({
     mutationKey: ['signup'],
     mutationFn: (credentials: UserSignupDetails) => signup(credentials),
@@ -48,10 +49,7 @@ const Signup = () => {
     const { isValid, errors } = validator(AccessSchema.signup, credentials)
     setFormErrors(errors)
 
-    if (!isValid) {
-      console.log('Form not valid')
-      return
-    }
+    if (!isValid) return
 
     postSignup(credentials)
   }
@@ -92,6 +90,7 @@ const Signup = () => {
       <PrimaryButton type="submit" displayText="Signup" />
       {isPending && <span>Loading...</span>}
       {isError && <span>Oops... this error is from our side</span>}
+      {isSuccess && <span>Singup succeed, now use your credentials to login</span>}
     </form>
   )
 }

@@ -2,23 +2,21 @@ import * as React from 'react'
 import Input from '../ui/Input'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
 import { useQuery } from '@tanstack/react-query'
-import { useAuth } from '../../lib/AuthContext'
 import { User } from '../../types/types'
 import UserCard from './UserCard'
 import ErrorTypography from '../ui/ErrorTypography'
 import Loading from '../ui/Loading'
+import { useDebounce } from '../../hooks/useDebounce'
 
 const SearchUsers = () => {
   const [query, setQuery] = React.useState<string>('')
 
-  const deferredQ = React.useDeferredValue(query)
-
-  const { user } = useAuth()
+  const debouncedQuery = useDebounce(query, 300)
 
   const { searchUsers } = nodeServerApi()
 
   const handleSearch = async () => {
-    const response = await searchUsers(deferredQ)
+    const response = await searchUsers(debouncedQuery)
     return response.data.data as User[]
   }
 
@@ -27,9 +25,9 @@ const SearchUsers = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['search-users', deferredQ],
+    queryKey: ['search-users', debouncedQuery],
     queryFn: handleSearch,
-    enabled: deferredQ.length >= 2,
+    enabled: debouncedQuery.length >= 2,
   })
 
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {

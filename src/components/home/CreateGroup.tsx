@@ -4,7 +4,7 @@ import IconButton from '../ui/IconButton'
 import { GoPersonAdd } from 'react-icons/go'
 import { useMutation } from '@tanstack/react-query'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
-import { cn, validator } from '../../lib/utils'
+import { cn } from '../../lib/utils'
 import { useAuth } from '../../lib/AuthContext'
 import PrimaryButton from '../ui/PrimaryButton'
 
@@ -34,15 +34,16 @@ const CreateGroup = () => {
     mutationFn: () =>
       createConversation(
         true,
-        [...newGroupState.participants, user.id.toString()], // always include current user to the newly created group
+        [...newGroupState.participants, user.id.toString()], // include current user to the newly created group
         newGroupState.name,
       ),
   })
 
   const handleStartAddingContacts = () => {
-    // we could use validator here
+    // could use validator here
     if (newGroupState.name.length < 3) {
       setNameError('Group name is too short')
+      setIsValidToContinue(false)
       return
     }
 
@@ -56,13 +57,11 @@ const CreateGroup = () => {
     setNewGroupState((prev) => ({ ...prev, participants: [...prev.participants, id.toString()] }))
   }
 
-  console.log('USER: ', user)
-
   return (
     <div className="h-auto w-full rounded bg-base-dark p-2 shadow">
       <div
         className={cn(
-          'flex flex-col items-center justify-center',
+          'flex flex-col items-center justify-center gap-4',
           'sm:flex-row sm:items-baseline sm:justify-evenly',
         )}
       >
@@ -80,7 +79,10 @@ const CreateGroup = () => {
         <IconButton icon={<GoPersonAdd />} onClick={handleStartAddingContacts} />
       </div>
       <div className="mt-4 flex flex-col">
-        {isValidToContinue &&
+        {isValidToContinue && (user?.contacts?.length === 0 || user?.contacts === undefined) ? (
+          <p className="self-center text-xs text-t-sec">Could not find any contacts</p>
+        ) : (
+          isValidToContinue &&
           user?.contacts?.map((p) => (
             <div
               className="flex p-2 hover:shadow hover:shadow-t"
@@ -88,7 +90,8 @@ const CreateGroup = () => {
             >
               <p key={p.id}>{p.username}</p>)
             </div>
-          ))}
+          ))
+        )}
         {newGroupState.participants.length > 0 && (
           <PrimaryButton
             displayText="Create group"

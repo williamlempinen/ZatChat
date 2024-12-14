@@ -3,7 +3,6 @@ import Input from '../ui/Input'
 import { validator } from '../../lib/utils'
 import AccessSchema from './schema'
 import { useAuth } from '../../lib/AuthContext'
-import { nodeServerApi } from '../../lib/api/nodeServerApi'
 import PrimaryButton from '../ui/PrimaryButton'
 import { useMutation } from '@tanstack/react-query'
 
@@ -22,8 +21,6 @@ const Login = () => {
   >({})
 
   const { login } = useAuth()
-
-  const { testGetProtectedData } = nodeServerApi()
 
   const {
     mutate: postLogin,
@@ -85,7 +82,7 @@ const Login = () => {
         displayText="Login"
         disabled={credentials.email === '' || credentials.password === ''}
       />
-      {isPending && <span>Loading...</span>}
+      {isPending && <span>Checking credentials...</span>}
       {isError && <span>Wrong credentials, try again</span>}
     </form>
   )
