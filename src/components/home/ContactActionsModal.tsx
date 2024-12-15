@@ -280,12 +280,12 @@ const ContactActionsModal = ({
                   )}
                   {!isErrorGroupConversations &&
                   !isLoadingGroupConversations &&
-                  addableGroups().length === 0 ? (
+                  addableGroups()?.length === 0 ? (
                     <p className="my-2 self-center text-xs text-t-sec">
                       You don't have any created groups
                     </p>
                   ) : (
-                    addableGroups().map((g: Conversation) => (
+                    addableGroups()?.map((g: Conversation) => (
                       <div
                         key={`${g.id}-${g.group_name}`}
                         className="m-1 flex flex-col rounded bg-base-light p-1 hover:shadow hover:shadow-t"

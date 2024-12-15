@@ -57,6 +57,7 @@ const CreateGroup = () => {
     setNewGroupState((prev) => ({ ...prev, participants: [...prev.participants, id.toString()] }))
   }
 
+  // successful group creations shoudl appear immediately in previous conversations
   return (
     <div className="h-auto w-full rounded bg-base-dark p-2 shadow">
       <div
