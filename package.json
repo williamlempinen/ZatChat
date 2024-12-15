@@ -6,6 +6,7 @@
   "scripts": {
     "start": "npx serve -s dist",
     "dev": "vite",
+    "scan": "vite & npx react-scan@latest localhost:3000",
     "host": "vite --host --port 3000",
     "build": "tsc && vite build",
     "lint": "eslint .",
