@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { useChat } from '../../lib/webSocket/ChatContext'
 import { Message } from '../../types/types'
-import Textarea from '../ui/Textarea'
+import Textarea from '../../components/ui/Textarea'
 import { useAuth } from '../../lib/AuthContext'
 import { GoPaperAirplane } from 'react-icons/go'
 import { GoMoveToTop } from 'react-icons/go'
-import IconButton from '../ui/IconButton'
+import IconButton from '../../components/ui/IconButton'
 
 type InputMessageAreaProps = {
   updateConversation: (message: Message) => void

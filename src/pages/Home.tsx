@@ -1,9 +1,9 @@
 import { useAuth } from '../lib/AuthContext'
-import SearchUsers from '../components/home/SearchUsers'
-import PreviousConversations from '../components/home/PreviousConversations'
+import SearchUsers from '../features/home/SearchUsers'
+import PreviousConversations from '../features/home/PreviousConversations'
 import { useToggle } from '../hooks/useToggle'
 import { cn } from '../lib/utils'
-import CreateGroup from '../components/home/CreateGroup'
+import CreateGroup from '../features/home/CreateGroup'
 
 const Home = () => {
   const { state: isConversations, toggle } = useToggle(true, false)

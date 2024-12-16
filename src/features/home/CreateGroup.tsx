@@ -1,12 +1,12 @@
 import * as React from 'react'
-import Input from '../ui/Input'
-import IconButton from '../ui/IconButton'
+import Input from '../../components/ui/Input'
+import IconButton from '../../components/ui/IconButton'
 import { GoPersonAdd } from 'react-icons/go'
 import { useMutation } from '@tanstack/react-query'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
 import { cn } from '../../lib/utils'
 import { useAuth } from '../../lib/AuthContext'
-import PrimaryButton from '../ui/PrimaryButton'
+import PrimaryButton from '../../components/ui/PrimaryButton'
 
 type NewGroup = {
   name: string

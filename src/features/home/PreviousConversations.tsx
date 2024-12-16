@@ -4,9 +4,9 @@ import ConversationBox from './ConversationBox'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '../../lib/AuthContext'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
-import PrimaryButton from '../ui/PrimaryButton'
-import Loading from '../ui/Loading'
-import ErrorTypography from '../ui/ErrorTypography'
+import PrimaryButton from '../../components/ui/PrimaryButton'
+import Loading from '../../components/ui/Loading'
+import ErrorTypography from '../../components/ui/ErrorTypography'
 
 const Root = ({ children }: React.PropsWithChildren) => (
   <div className="flex flex-col rounded bg-base-light p-2">{children}</div>
