@@ -1,11 +1,11 @@
 import * as React from 'react'
-import Input from '../ui/Input'
+import Input from '../../components/ui/Input'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
 import { useQuery } from '@tanstack/react-query'
 import { User } from '../../types/types'
 import UserCard from './UserCard'
-import ErrorTypography from '../ui/ErrorTypography'
-import Loading from '../ui/Loading'
+import ErrorTypography from '../../components/ui/ErrorTypography'
+import Loading from '../../components/ui/Loading'
 import { useDebounce } from '../../hooks/useDebounce'
 
 const SearchUsers = () => {

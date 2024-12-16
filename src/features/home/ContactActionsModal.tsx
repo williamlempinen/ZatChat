@@ -5,12 +5,12 @@ import { GoPersonAdd } from 'react-icons/go'
 import { GoCrossReference } from 'react-icons/go'
 import { GoCommentDiscussion } from 'react-icons/go'
 import { useAuth } from '../../lib/AuthContext'
-import PrimaryButton from '../ui/PrimaryButton'
+import PrimaryButton from '../../components/ui/PrimaryButton'
 import { nodeServerApi } from '../../lib/api/nodeServerApi'
 import { useNavigate } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import Loading from '../ui/Loading'
-import ErrorTypography from '../ui/ErrorTypography'
+import Loading from '../../components/ui/Loading'
+import ErrorTypography from '../../components/ui/ErrorTypography'
 
 type ContactActionsModalProps = {
   modalUser: User

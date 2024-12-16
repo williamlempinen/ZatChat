@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import PrimaryButton from '../components/ui/PrimaryButton'
 import { useChat } from '../lib/webSocket/ChatContext'
-import ConversationContainer from '../components/conversation/ConversationContainer'
+import ConversationContainer from '../features/conversation/ConversationContainer'
 
 const Conversation = () => {
   const navigate = useNavigate()

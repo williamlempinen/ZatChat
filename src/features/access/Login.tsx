@@ -1,9 +1,9 @@
 import * as React from 'react'
-import Input from '../ui/Input'
+import Input from '../../components/ui/Input'
 import { validator } from '../../lib/utils'
 import AccessSchema from './schema'
 import { useAuth } from '../../lib/AuthContext'
-import PrimaryButton from '../ui/PrimaryButton'
+import PrimaryButton from '../../components/ui/PrimaryButton'
 import { useMutation } from '@tanstack/react-query'
 
 type UserLoginDetails = {
