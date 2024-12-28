@@ -13,7 +13,7 @@ const config = {
         },
         base: {
           light: '#262119',
-          DEFAULT: '#2d3232',
+          DEFAULT: '#28282e',
           dark: '#1f1b13',
         },
         t: {
