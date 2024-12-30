@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "npx serve -s build",
+    "start": "npx serve -s dist",
     "dev": "vite",
     "scan": "vite & npx react-scan@latest localhost:3000",
     "host": "vite --host --port 3000",
