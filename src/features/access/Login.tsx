@@ -45,10 +45,7 @@ const Login = () => {
     const { isValid, errors } = validator(AccessSchema.login, credentials)
     setFormErrors(errors)
 
-    if (!isValid) {
-      console.log('Form not valid')
-      return
-    }
+    if (!isValid) return
 
     postLogin(credentials)
   }
@@ -69,7 +66,7 @@ const Login = () => {
         errorMessage={formErrors.email}
       />
       <Input
-        type="text" /*dev*/
+        type="password"
         name="password"
         value={credentials.password}
         onChange={handleInputChange}

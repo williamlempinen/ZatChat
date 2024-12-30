@@ -79,7 +79,7 @@ const Signup = () => {
         errorMessage={formErrors.email}
       />
       <Input
-        type="text" /*dev*/
+        type="password"
         name="password"
         value={credentials.password}
         onChange={handleInputChange}

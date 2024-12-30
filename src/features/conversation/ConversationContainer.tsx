@@ -49,7 +49,6 @@ const ConversationContainer = () => {
 
     if (res.data.length === 0) {
       setHasNextPage(false)
-      console.log('WAS LAST PAGE')
       return
     }
 
