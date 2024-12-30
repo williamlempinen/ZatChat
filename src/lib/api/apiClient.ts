@@ -2,7 +2,7 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 
 const apiClient = axios.create({
-  baseURL: 'https://zatchat-api.azurewebsites.net/api',
+  baseURL: 'https://zatchat-api.azurewebsites.net',
   headers: {
     'Content-Type': 'application/json',
   },
