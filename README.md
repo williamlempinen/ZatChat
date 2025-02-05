@@ -1,7 +1,6 @@
 # ZatChat
 
-
-- working on this atm -> contains a lot of dev things, such as logs
+> This project is not ready, thus not fully working.
 
 Simple React project where I use WebSockets to implement basic chatting features.
 
@@ -10,6 +9,9 @@ Server uses Express NodeJs
 ### Short demo
 
 ![](https://github.com/williamlempinen/ZatChat/raw/main/zatchat_demo1.gif)
+
+
+Development app is available in [zatchat.xyz](https://zatchat.xyz), which contains a lot of dev "features", such as plain text passwords and not working messaging. 
 
 
 
