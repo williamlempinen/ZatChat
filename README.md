@@ -11,16 +11,6 @@ Server uses Express NodeJs
 ![](https://github.com/williamlempinen/ZatChat/raw/main/zatchat_demo1.gif)
 
 
-Development app is available in [zatchat.xyz](https://zatchat.xyz), which contains a lot of dev "features", such as plain text passwords and not working messaging. 
-
-There exists two users with credentials of:
-
-| Email | Password | 
-|----------|----------|
-| william@example.com | william123 |
-| kaveri@example.com | kaveri123 | 
-
-
 ### todo
 
 - real-time handling of unread messages with websocket
